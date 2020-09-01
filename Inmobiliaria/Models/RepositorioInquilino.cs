@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Inmobiliaria_.Net_Core.Models
+namespace Inmobiliaria.Models
 {
 	public class RepositorioInquilino 
 	{

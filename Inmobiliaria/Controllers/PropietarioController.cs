@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Inmobiliaria_.Net_Core.Models;
+using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 
-namespace Inmobiliaria_.Net_Core.Controllers
+namespace Inmobiliaria.Controllers
 {
     public class PropietarioController : Controller
     {

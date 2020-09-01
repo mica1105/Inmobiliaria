@@ -8,23 +8,23 @@ using System.Data.SqlTypes;
 
 namespace Inmobiliaria.Models
 {
-    public class Inmueble
+    public class Contrato
     {
         [Display(Name = "Código")]
         public int Id { get; set; }
         [Required]
-        public string Direccion { get; set; }
+        public DateTime FechaInicio { get; set; }
         [Required]
-        public string Tipo { get; set; }
-        public int Ambientes { get; set; }
+        public DateTime FechaFin { get; set; }
         [Required]
-        public string Uso { get; set; }
-        public SqlMoney Precio { get; set; }
-        public int Estado { get; set; }
+        public SqlMoney PrecioMensual { get; set; }
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }
         [ForeignKey("PropietarioId")]
         public Propietario Duenio { get; set; }
+        [Display(Name ="Inquilino")]
+        public int InquilinoId { get; set; }
+        [ForeignKey("InquilinoId")]
+        public Inquilino inquilino { get; set; }
     }
 }
-

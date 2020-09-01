@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Inmobiliaria_.Net_Core.Models;
+using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Inmobiliaria_.Net_Core.Controllers
+namespace Inmobiliaria.Controllers
 {
     public class InquilinoController : Controller
     {
