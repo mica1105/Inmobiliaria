@@ -5,17 +5,18 @@ using System.Threading.Tasks;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace Inmobiliaria.Controllers
 {
     public class InquilinoController : Controller
     {
 		RepositorioInquilino repositorio;
+        public InquilinoController(IConfiguration configuration)
+        {
+            repositorio = new RepositorioInquilino(configuration);
+        }
 
-		public InquilinoController()
-		{
-		  repositorio= new RepositorioInquilino();
-		}
 
         // GET: Inquilino
         public ActionResult Index()
@@ -48,11 +49,11 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Inquilino propietario)
+        public ActionResult Create(Inquilino inquilino)
         {
             try
             {          
-					repositorio.Alta(propietario);
+					repositorio.Alta(inquilino);
 					return RedirectToAction(nameof(Index));
 			}
             catch(Exception ex)
@@ -71,22 +72,12 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Inquilino inquilino)
         {
-            Inquilino e = null;
+          
             try
             {
-                e = repositorio.ObtenerPorId(id);
-                e.Nombre = collection["Nombre"];
-                e.Apellido = collection["Apellido"];
-                e.Dni = collection["Dni"];
-                e.LugarTrabajo = collection["LugarTrabajo"];
-                e.Email = collection["Email"];
-                e.Telefono = collection["Telefono"];
-                e.NombreGarante = collection["NombreGarante"];
-                e.DniGarante = collection["DniGarante"];
-                e.TelefonoGarante = collection["TelefonoGarante"];
-                repositorio.Modificacion(e);
+                repositorio.Modificacion(inquilino);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -105,7 +96,7 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Inquilino inquilino)
         {
             try
             {

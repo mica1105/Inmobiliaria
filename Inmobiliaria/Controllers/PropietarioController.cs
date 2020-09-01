@@ -14,9 +14,9 @@ namespace Inmobiliaria.Controllers
     public class PropietarioController : Controller
     {
         RepositorioPropietario repositorio;
-        public PropietarioController()
+        public PropietarioController(IConfiguration configuration)
         {
-             repositorio = new RepositorioPropietario();
+             repositorio = new RepositorioPropietario(configuration);
             
         }
 
@@ -76,18 +76,11 @@ namespace Inmobiliaria.Controllers
         // POST: Propietario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Propietario propietario)
         {
-            Propietario p = null;
             try
-            {
-                p = repositorio.ObtenerPorId(id);
-                p.Nombre = collection["Nombre"];
-                p.Apellido = collection["Apellido"];
-                p.Dni = collection["Dni"];
-                p.Email = collection["Email"];
-                p.Telefono = collection["Telefono"];
-                repositorio.Modificacion(p);
+            {             
+                repositorio.Modificacion(propietario);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

@@ -10,7 +10,13 @@ namespace Inmobiliaria.Models
 {
 	public class RepositorioInquilino 
 	{
-		private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog = Inmobiliaria; Integrated Security = True;";
+		private readonly string connectionString;
+		private readonly IConfiguration conf;
+        public RepositorioInquilino(IConfiguration configuration)
+        {
+			this.conf = configuration;
+			this.connectionString = conf["ConnectionStrings:DefaultConnection"];
+        }
 
 		public int Alta(Inquilino e)
 		{
@@ -18,7 +24,8 @@ namespace Inmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"INSERT INTO Inquilino (Nombre, Apellido, Dni, LugarTrabajo, Telefono, Email, NombreGarante, DniGarante, TelefonoGarante) " +
-					$"VALUES (@nombre, @apellido, @dni, @lugar, @telefono, @email, @ngarante, @dnigarante, @tgarante)";
+					$"VALUES (@nombre, @apellido, @dni, @lugar, @telefono, @email, @ngarante, @dnigarante, @tgarante);" +
+					"SELECT SCOPE_IDENTITY();";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -39,6 +46,7 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
+
 		public int Baja(int id)
 		{
 			int res = -1;
@@ -55,6 +63,7 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
+
 		public int Modificacion(Inquilino e)
 		{
 			int res = -1;
@@ -118,8 +127,6 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
-
-		
 
 		public Inquilino ObtenerPorId(int id)
 		{
