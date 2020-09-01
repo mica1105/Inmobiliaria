@@ -10,9 +10,8 @@ namespace Inmobiliaria_.Net_Core.Models
 {
 	public class RepositorioInquilino 
 	{
-        private readonly string connectionString= @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog = Inmobiliaria; Integrated Security = True;";
+		private readonly string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog = Inmobiliaria; Integrated Security = True;";
 
-     
 		public int Alta(Inquilino e)
 		{
 			int res = -1;
