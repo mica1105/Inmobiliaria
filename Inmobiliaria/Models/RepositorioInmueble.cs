@@ -92,8 +92,7 @@ namespace Inmobiliaria.Models
 			IList<Inmueble> res = new List<Inmueble>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = "SELECT Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId," +
-					" p.Nombre, p.Apellido" +
+				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
 					" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -109,7 +108,7 @@ namespace Inmobiliaria.Models
 							Tipo = reader.GetString(2),
 							Ambientes = reader.GetInt32(3),
 							Uso = reader.GetString(4),
-							Precio = reader.GetSqlMoney(5),
+							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
 							PropietarioId = reader.GetInt32(7),
 							Duenio = new Propietario
@@ -132,9 +131,9 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
-					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
-					$" WHERE Id=@id";
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id " +
+					$"WHERE i.Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.Parameters.Add("@id", SqlDbType.Int).Value = id;
@@ -150,7 +149,7 @@ namespace Inmobiliaria.Models
 							Tipo = reader.GetString(2),
 							Ambientes = reader.GetInt32(3),
 							Uso = reader.GetString(4),
-							Precio = reader.GetSqlMoney(5),
+							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
 							PropietarioId = reader.GetInt32(7),
 							Duenio = new Propietario
@@ -173,7 +172,7 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
 					$" WHERE PropietarioId=@idPropietario";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -191,7 +190,7 @@ namespace Inmobiliaria.Models
 							Tipo = reader.GetString(2),
 							Ambientes = reader.GetInt32(3),
 							Uso = reader.GetString(4),
-							Precio = reader.GetSqlMoney(5),
+							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
 							PropietarioId = reader.GetInt32(7),
 							Duenio = new Propietario

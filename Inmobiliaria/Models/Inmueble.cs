@@ -19,7 +19,8 @@ namespace Inmobiliaria.Models
         public int Ambientes { get; set; }
         [Required]
         public string Uso { get; set; }
-        public SqlMoney Precio { get; set; }
+        [Required]
+        public decimal Precio { get; set; }
         public int Estado { get; set; }
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }

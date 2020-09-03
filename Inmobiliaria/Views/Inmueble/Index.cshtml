@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Inmobiliaria.Models.Inmueble>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Inmuebles";
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Registrar</a>
 </p>
 <table class="table">
     <thead>
@@ -28,11 +28,13 @@
                 @Html.DisplayNameFor(model => model.Uso)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Estado)
+                @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PropietarioId)
             </th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -55,15 +57,16 @@
                 @Html.DisplayFor(modelItem => item.Uso)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Estado)
+                @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PropietarioId)
+                @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar">Editar</a>
+            </td>
+            <td>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Delete">Eliminar</a>
             </td>
         </tr>
 }

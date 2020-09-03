@@ -13,9 +13,11 @@ namespace Inmobiliaria.Controllers
     public class InmuebleController : Controller
     {
         RepositorioInmueble repositorio;
+        private readonly RepositorioPropietario repoPropietario;
         public InmuebleController(IConfiguration configuration)
         {
             repositorio = new RepositorioInmueble(configuration);
+            repoPropietario = new RepositorioPropietario(configuration);
         }
 
         // GET: InmuebleController
@@ -25,16 +27,10 @@ namespace Inmobiliaria.Controllers
             return View(lista);
         }
 
-        // GET: InmuebleController/Details/5
-        public ActionResult Details(int id)
-        {
-            var i = repositorio.ObtenerPorId(id);
-            return View();
-        }
-
         // GET: InmuebleController/Create
         public ActionResult Create()
         {
+            ViewBag.Propietarios = repoPropietario.ObtenerTodos();
             return View();
         }
 
@@ -45,10 +41,19 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
-                repositorio.Alta(inmueble);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    repositorio.Alta(inmueble);
+                    TempData["Id"] = inmueble.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+                    return View(inmueble);
+                }
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }
@@ -57,8 +62,13 @@ namespace Inmobiliaria.Controllers
         // GET: InmuebleController/Edit/5
         public ActionResult Edit(int id)
         {
-            var i = repositorio.ObtenerPorId(id);
-            return View(i);
+            var entidad = repositorio.ObtenerPorId(id);
+            ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+            return View(entidad);
         }
 
         // POST: InmuebleController/Edit/5
