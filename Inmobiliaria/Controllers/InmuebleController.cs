@@ -12,7 +12,7 @@ namespace Inmobiliaria.Controllers
 {
     public class InmuebleController : Controller
     {
-        RepositorioInmueble repositorio;
+        private RepositorioInmueble repositorio;
         private readonly RepositorioPropietario repoPropietario;
         public InmuebleController(IConfiguration configuration)
         {
@@ -81,7 +81,7 @@ namespace Inmobiliaria.Controllers
                 repositorio.Modificacion(inmueble);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -104,7 +104,7 @@ namespace Inmobiliaria.Controllers
                 repositorio.Baja(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }

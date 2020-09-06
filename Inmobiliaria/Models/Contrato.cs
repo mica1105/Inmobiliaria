@@ -12,19 +12,20 @@ namespace Inmobiliaria.Models
     {
         [Display(Name = "Código")]
         public int Id { get; set; }
-        [Required]
+        [Required] [Display(Name ="Inicia")]
         public DateTime FechaInicio { get; set; }
         [Required]
+        [Display(Name = "Finaliza")]
         public DateTime FechaFin { get; set; }
         [Required]
-        public SqlMoney PrecioMensual { get; set; }
-        [Display(Name = "Dueño")]
-        public int PropietarioId { get; set; }
+        public Decimal Precio { get; set; }
+        [Display(Name = "Inmueble")]
+        public int InmuebleId { get; set; }
         [ForeignKey("PropietarioId")]
-        public Propietario Duenio { get; set; }
+        public Inmueble Inmueble { get; set; }
         [Display(Name ="Inquilino")]
         public int InquilinoId { get; set; }
         [ForeignKey("InquilinoId")]
-        public Inquilino inquilino { get; set; }
+        public Inquilino Inquilino { get; set; }
     }
 }
