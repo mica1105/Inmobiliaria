@@ -86,7 +86,6 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
-
 		public IList<Inmueble> ObtenerTodos()
 		{
 			IList<Inmueble> res = new List<Inmueble>();
@@ -125,7 +124,6 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
-
 		public Inmueble ObtenerPorId(int id)
 		{
 			Inmueble entidad = null;
@@ -165,7 +163,6 @@ namespace Inmobiliaria.Models
 			}
 			return entidad;
 		}
-
 		public IList<Inmueble> BuscarPorPropietario(int idPropietario)
 		{
 			List<Inmueble> res = new List<Inmueble>();
