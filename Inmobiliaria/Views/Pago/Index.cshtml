@@ -14,7 +14,7 @@
     <a class="btn btn-primary" asp-action="Create" asp-route-id="@contrato.Id">Nuevo Pago</a>
 </p>
 <table class="table">
-    <thead>
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Id)
@@ -27,9 +27,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Importe)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContratoId)
             </th>
             <th></th>
             <th></th>
@@ -52,9 +49,6 @@
                 @Html.DisplayFor(modelItem => item.Importe)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ContratoId)
-            </td>
-            <td>
                 <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar">Editar</a>
             </td>
             <td>
@@ -64,3 +58,6 @@
         }
     </tbody>
 </table>
+<div>
+    <a class="btn btn-secondary" asp-controller="Contrato" asp-action="Index">Volver</a>
+</div>

@@ -12,7 +12,7 @@ namespace Inmobiliaria.Models
 		[Key]
 		[Display(Name = "Código")]
 		public int Id { get; set; }
-		[Required]
+		[Required] [Display(Name ="Nro de Pago")]
 		public int NroPago { get; set; }
 		[Required]
 		public DateTime Fecha { get; set; }
