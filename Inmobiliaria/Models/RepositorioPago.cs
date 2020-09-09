@@ -46,7 +46,7 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Pagos WHERE Id = {id}";
+				string sql = $"DELETE FROM Pago WHERE Id = {id}";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -80,16 +80,18 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
-		public IList<Pago> ObtenerTodos()
+		public IList<Pago> ObtenerTodos(int id)
 		{
 			IList<Pago> res = new List<Pago>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"SELECT p.Id, NroPago, Fecha, Importe, ContratoId, c.Precio, c.InmuebleId, c.InquilinoId" +
-					$" FROM Pago p INNER JOIN Contrato c ON p.ContratoId = c.Id";
+					$" FROM Pago p INNER JOIN Contrato c ON p.ContratoId = c.Id" +
+					$" WHERE c.Id = @idContrato";
 					
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
+					command.Parameters.Add("@idContrato", SqlDbType.Int).Value = id;
 					command.CommandType = CommandType.Text;
 					connection.Open();
 					var reader = command.ExecuteReader();
@@ -124,7 +126,7 @@ namespace Inmobiliaria.Models
 			{
 				string sql = $"SELECT p.Id, NroPago, Fecha, Importe, ContratoId, c.Precio, c.InmuebleId, c.InquilinoId" +
 					$" FROM Pago p INNER JOIN Contrato c ON p.ContratoId = c.Id" +
-					$"WHERE p.Id=@id";
+					$" WHERE p.Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.Parameters.Add("@id", SqlDbType.Int).Value = id;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
@@ -19,9 +20,10 @@ namespace Inmobiliaria.Controllers
             repoContrato = new RepositorioContrato(configuration);
         }
         // GET: PagoController
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
-            var lista = repositorio.ObtenerTodos();
+            ViewBag.Contrato= repoContrato.ObtenerPorId(id);
+            var lista = repositorio.ObtenerTodos(id);
             return View(lista);
         }
 
@@ -32,21 +34,32 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: PagoController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
+            ViewBag.Contrato = repoContrato.ObtenerPorId(id);
             return View();
         }
 
         // POST: PagoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Pago pago)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    repositorio.Alta(pago);
+                    TempData["Id"] = pago.Id;
+                    return RedirectToAction("Index","Pago",new {id= pago.ContratoId});
+                }
+                else
+                {
+                    ViewBag.Contrato = repoContrato.ObtenerPorId(pago.ContratoId);
+                    return View(pago);
+                }
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -55,19 +68,21 @@ namespace Inmobiliaria.Controllers
         // GET: PagoController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var entidad = repositorio.ObtenerPorId(id);
+            return View(entidad);
         }
 
         // POST: PagoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Pago pago)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                repositorio.Modificacion(pago);
+                return RedirectToAction("Index", "Pago", new { id = pago.ContratoId });
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
@@ -76,19 +91,21 @@ namespace Inmobiliaria.Controllers
         // GET: PagoController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var entidad = repositorio.ObtenerPorId(id);
+            return View(entidad);
         }
 
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Pago pago)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                repositorio.Baja(id);
+                return RedirectToAction("Index", "Contrato");
             }
-            catch
+            catch(Exception ex)
             {
                 return View();
             }
