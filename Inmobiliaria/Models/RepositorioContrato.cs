@@ -48,7 +48,8 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Contrato WHERE Id = {id}";
+				string sql = $"DELETE FROM Pago WHERE ContratoId = {id};" +
+					$"DELETE FROM Contrato WHERE Id = {id};";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
