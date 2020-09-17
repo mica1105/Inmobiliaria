@@ -13,7 +13,7 @@ namespace Inmobiliaria.Controllers
 {
     public class PropietarioController : Controller
     {
-        RepositorioPropietario repositorio;
+        private RepositorioPropietario repositorio;
         public PropietarioController(IConfiguration configuration)
         {
              repositorio = new RepositorioPropietario(configuration);
