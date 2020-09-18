@@ -29,8 +29,8 @@ namespace Inmobiliaria
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>//el sitio web valida con cookie
                 {
-                                options.LoginPath = "/Usuarios/Login";
-                                options.LogoutPath = "/Usuarios/Logout";
+                                options.LoginPath = "/Usuario/Login";
+                                options.LogoutPath = "/Usuario/Logout";
                                 options.AccessDeniedPath = "/Home/Restringido";
                             });
             services.AddAuthorization(options =>
@@ -76,6 +76,8 @@ namespace Inmobiliaria
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute("login", "login/{**accion}", new { controller = "Usuario", action = "Login" });
+                endpoints.MapControllerRoute("rutaFija", "ruteo/{valor}", new { controller = "Home", action = "Ruta", valor = "defecto" });
             });
         }
     }

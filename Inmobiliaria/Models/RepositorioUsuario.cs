@@ -65,7 +65,7 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Email=@email, Clave=@clave, Rol=@rol " +
+				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Email=@email, Rol=@rol " +
 					$"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -73,7 +73,6 @@ namespace Inmobiliaria.Models
 					command.Parameters.AddWithValue("@nombre", e.Nombre);
 					command.Parameters.AddWithValue("@apellido", e.Apellido);
 					command.Parameters.AddWithValue("@email", e.Email);
-					command.Parameters.AddWithValue("@clave", e.Clave);
 					command.Parameters.AddWithValue("@rol", e.Rol);
 					command.Parameters.AddWithValue("@id", e.Id);
 					connection.Open();

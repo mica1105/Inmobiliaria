@@ -6,41 +6,46 @@
     <title>@ViewData["Title"] - Inmobiliaria</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-light navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" style="background-color: #e3f2fd;">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Inmobiliaria</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Index">Usuarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Propietario" asp-action="Index">Propietarios</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inquilino" asp-action="Index">Inquilinos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Inmueble" asp-action="Index">Inmuebles</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Contrato" asp-action="Index">Alquileres</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacidad</a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="container d-flex flex-column flex-md-row justify-content-between">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="lnr lnr-home"></span>Inmobiliaria</a>
+                    <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="lnr lnr-enter"></i>Acceder</a>
+                }
+                else
+                {
+                    <div class="dropdown">
+                        <a class="btn btn-outline-secondary dropdown-toggle font-weight-bold" href="#" role="button" id="homeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
+                            <span class="lnr lnr-star"></span> Inicio
+                        </a>
+                        <div class="dropdown-menu bg-secondary" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="lnr lnr-home"></i> Inicio</a>
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Privacy"><i class="lnr lnr-layers"></i> Claims</a>
+                        </div>
+                    </div>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                     <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="lnr lnr-users"></i> Usuarios</a>
+                    }
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Propietario" asp-action="Index"><span class="lnr lnr-mustache"></span> Propietarios</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inquilino" asp-action="Index"><span class="lnr lnr-smile"></span> Inquilinos</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inmueble" asp-action="Index"><span class="lnr lnr-apartment"></span> Inmuebles</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Contrato" asp-action="Index"><span class="lnr lnr-license"></span> Alquileres</a>
+                    <div class="dropdown">
+                        <a class="btn btn-outline-primary dropdown-toggle font-weight-bold" href="#" role="button" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
+                            <i class="lnr lnr-user"></i> @User.Identity.Name
+                        </a>
+                        <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a>
+                            <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                        </div>
+                    </div>
+                }
             </div>
         </nav>
     </header>
@@ -57,6 +62,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

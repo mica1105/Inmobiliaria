@@ -27,6 +27,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: UsuarioController
+        [Authorize(Policy = "Administrador")]
         public ActionResult Index()
         {
             var usuarios = repositorio.ObtenerTodos();
@@ -34,6 +35,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: UsuarioController/Details/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Details(int id)
         {
             var usuario = repositorio.ObtenerPorId(id);
@@ -41,6 +43,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: UsuarioController/Create
+        [Authorize(Policy = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Roles = Usuario.ObtenerRoles();
@@ -75,9 +78,20 @@ namespace Inmobiliaria.Controllers
             }
         }
 
+        [Authorize]
+        public ActionResult Perfil()
+        {
+            ViewData["Title"] = "Mi perfil";
+            var u = repositorio.ObtenerPorEmail(User.Identity.Name);
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            return View("Edit", u);
+        }
+
         // GET: UsuarioController/Edit/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
+            ViewData["Title"] = "Editar usuario";
             var u = repositorio.ObtenerPorId(id);
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(u);
@@ -95,11 +109,16 @@ namespace Inmobiliaria.Controllers
                 {
                     vista = "Perfil";
                     var usuarioActual = repositorio.ObtenerPorEmail(User.Identity.Name);
-                    if (usuarioActual.Id != id)//si no es admin, solo puede modificarse él mismo
+                    if (usuarioActual.Id != id)
+                    {//si no es admin, solo puede modificarse él mismo
                         return RedirectToAction(nameof(Index), "Home");
+                    }
+                    else {
+                        repositorio.Modificacion(usuarioActual);
+                        return RedirectToAction(nameof(Index), "Home");
+                    }
                 }
-                // TODO: Add update logic here
-
+                repositorio.Modificacion(u);
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
@@ -110,6 +129,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: UsuarioController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -131,6 +151,7 @@ namespace Inmobiliaria.Controllers
             }
         }
 
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
