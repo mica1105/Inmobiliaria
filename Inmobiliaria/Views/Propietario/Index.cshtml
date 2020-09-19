@@ -31,7 +31,6 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -56,10 +55,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id">Modificar</a>
-            </td>
-            <td>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Eliminar</a>
+                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="lnr lnr-pencil"></span></a>
+            @if (User.IsInRole("Administrador")) {
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
+            }
             </td>
         </tr>
 }

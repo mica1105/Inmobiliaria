@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: InmuebleController
+        [Authorize]
         public ActionResult Index()
         {
             var lista = repositorio.ObtenerTodos();
@@ -28,6 +30,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: InmuebleController/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Propietarios = repoPropietario.ObtenerTodos();
@@ -60,6 +63,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: InmuebleController/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
@@ -97,6 +101,7 @@ namespace Inmobiliaria.Controllers
         // POST: InmuebleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble inmueble)
         {
             try

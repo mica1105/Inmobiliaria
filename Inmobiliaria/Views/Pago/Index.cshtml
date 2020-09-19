@@ -29,7 +29,6 @@
                 @Html.DisplayNameFor(model => model.Importe)
             </th>
             <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -49,10 +48,10 @@
                 @Html.DisplayFor(modelItem => item.Importe)
             </td>
             <td>
-                <a class="btn btn-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar">Editar</a>
-            </td>
-            <td>
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id" title="Delete">Eliminar</a>
+                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="lnr lnr-pencil"></span></a>
+            @if (User.IsInRole("Administrador")) {
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
+            }
             </td>
         </tr>
         }

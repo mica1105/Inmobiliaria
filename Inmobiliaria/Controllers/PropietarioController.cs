@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Propietario
+        [Authorize]
         public ActionResult Index()
         {
             var lista = repositorio.ObtenerTodos();
@@ -44,6 +46,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Propietario/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -67,6 +70,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: Propietario/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var p = repositorio.ObtenerPorId(id);
@@ -88,8 +92,9 @@ namespace Inmobiliaria.Controllers
                 throw;
             }
         }
-       
+
         // GET: Propietario/Delete
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var p = repositorio.ObtenerPorId(id);
