@@ -12,15 +12,15 @@ namespace Inmobiliaria.Controllers
 {
     public class ContratoController : Controller
     {
-        private RepositorioContrato repositorio;
-        private readonly RepositorioInmueble repoInmueble;
-        private readonly RepositorioInquilino repoInquilino;
+        private IRepositorio<Contrato> repositorio;
+        private readonly IRepositorioInmueble repoInmueble;
+        private readonly IRepositorio<Inquilino> repoInquilino;
 
-        public ContratoController(IConfiguration configuration)
+        public ContratoController(IRepositorio<Contrato> repositorio, IRepositorioInmueble repositorioInmueble,IRepositorio<Inquilino> repositorioInquilino)
         {
-            repositorio = new RepositorioContrato(configuration);
-            repoInmueble = new RepositorioInmueble(configuration);
-            repoInquilino = new RepositorioInquilino(configuration);
+            this.repositorio = repositorio;
+            repoInmueble = repositorioInmueble;
+            repoInquilino = repositorioInquilino;
         }
 
         // GET: ContratoController

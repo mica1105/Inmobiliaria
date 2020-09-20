@@ -14,16 +14,16 @@
             <div class="container d-flex flex-column flex-md-row justify-content-between">
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><span class="lnr lnr-home"></span>Inmobiliaria</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/Logo.jpg"></a>
                     <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="lnr lnr-enter"></i>Acceder</a>
                 }
                 else
                 {
                     <div class="dropdown">
-                        <a class="btn btn-outline-secondary dropdown-toggle font-weight-bold" href="#" role="button" id="homeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
-                            <span class="lnr lnr-star"></span> Inicio
+                        <a class="btn btn-outline-info dropdown-toggle font-weight-bold" href="#" role="button" id="homeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
+                            <img class="my-0" width="180" src="~/img/Logo.jpg">
                         </a>
-                        <div class="dropdown-menu bg-secondary" aria-labelledby="dropdownMenuLink">
+                        <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="lnr lnr-home"></i> Inicio</a>
                             <a class="dropdown-item" asp-controller="Home" asp-action="Privacy"><i class="lnr lnr-layers"></i> Claims</a>
                         </div>

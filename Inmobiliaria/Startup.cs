@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using Inmobiliaria.Models;
 
 namespace Inmobiliaria
 {
@@ -38,6 +39,14 @@ namespace Inmobiliaria
                 //options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
                 options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador"));
             });
+            services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
+            services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
+            services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
+            services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
+            services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
+            services.AddTransient<IRepositorioPago, RepositorioPago>();
+            services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

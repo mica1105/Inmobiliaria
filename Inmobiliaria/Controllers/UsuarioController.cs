@@ -18,11 +18,11 @@ namespace Inmobiliaria.Controllers
 {
     public class UsuarioController : Controller
     {
-        private RepositorioUsuario repositorio;
+        private IRepositorioUsuario repositorio;
         private readonly IConfiguration conf;
-        public UsuarioController(IConfiguration configuration)
+        public UsuarioController(IConfiguration configuration, IRepositorioUsuario repositorio)
         {
-            repositorio = new RepositorioUsuario(configuration);
+            this.repositorio = repositorio;
             conf = configuration;
         }
 

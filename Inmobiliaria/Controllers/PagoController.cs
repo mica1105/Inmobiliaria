@@ -13,8 +13,8 @@ namespace Inmobiliaria.Controllers
 {
     public class PagoController : Controller
     {
-        private RepositorioContrato repoContrato;
-        private RepositorioPago repositorio;
+        private IRepositorio<Contrato> repoContrato;
+        private IRepositorioPago repositorio;
         public PagoController(IConfiguration configuration)
         {
             repositorio = new RepositorioPago(configuration);

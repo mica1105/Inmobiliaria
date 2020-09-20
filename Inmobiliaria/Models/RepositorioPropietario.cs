@@ -8,15 +8,13 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-	public class RepositorioPropietario 
+	public class RepositorioPropietario : RepositorioBase, IRepositorioPropietario
 	{
-		private readonly string connectionString;
-		private readonly IConfiguration conf;
+		
 
-        public RepositorioPropietario(IConfiguration configuration)
+        public RepositorioPropietario(IConfiguration configuration): base(configuration)
         {
-			this.conf = configuration;
-			this.connectionString = conf["ConnectionStrings:DefaultConnection"];
+			
 		}
 		public int Alta(Propietario p)
 		{

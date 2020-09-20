@@ -8,14 +8,12 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-    public class RepositorioPago
+    public class RepositorioPago : RepositorioBase, IRepositorioPago
     {
-		private readonly string connectionString;
-		private readonly IConfiguration conf;
-        public RepositorioPago(IConfiguration configuration)
+		
+        public RepositorioPago(IConfiguration configuration): base(configuration)
         {
-			this.conf = configuration;
-			this.connectionString = conf["ConnectionStrings:DefaultConnection"];
+			
 		}
 
 		public int Alta(Pago entidad)
