@@ -18,15 +18,17 @@ namespace Inmobiliaria.Controllers
 {
     public class UsuarioController : Controller
     {
-        private IRepositorioUsuario repositorio;
-        private readonly IConfiguration conf;
-        public UsuarioController(IConfiguration configuration, IRepositorioUsuario repositorio)
+        private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment environment;
+        private readonly IRepositorioUsuario repositorio;
+
+        public UsuarioController(IConfiguration configuration, IWebHostEnvironment environment, IRepositorioUsuario repositorio)
         {
+            this.configuration = configuration;
+            this.environment = environment;
             this.repositorio = repositorio;
-            conf = configuration;
         }
 
-        // GET: UsuarioController
         [Authorize(Policy = "Administrador")]
         public ActionResult Index()
         {
@@ -34,15 +36,15 @@ namespace Inmobiliaria.Controllers
             return View(usuarios);
         }
 
-        // GET: UsuarioController/Details/5
+        // GET: Usuarios/Details/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Details(int id)
         {
-            var usuario = repositorio.ObtenerPorId(id);
-            return View(usuario);
+            var e = repositorio.ObtenerPorId(id);
+            return View(e);
         }
 
-        // GET: UsuarioController/Create
+        // GET: Usuarios/Create
         [Authorize(Policy = "Administrador")]
         public ActionResult Create()
         {
@@ -50,18 +52,22 @@ namespace Inmobiliaria.Controllers
             return View();
         }
 
-        // POST: UsuarioController/Create
+        // POST: Usuarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Create(Usuario u)
         {
+
             if (!ModelState.IsValid)
+            {
                 return View();
+            }
             try
             {
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: u.Clave,
-                        salt: System.Text.Encoding.ASCII.GetBytes(conf["Salt"]),
+                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
                         prf: KeyDerivationPrf.HMACSHA1,
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
@@ -69,6 +75,24 @@ namespace Inmobiliaria.Controllers
                 u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)enRoles.Empleado;
                 var nbreRnd = Guid.NewGuid();//posible nombre aleatorio
                 int res = repositorio.Alta(u);
+                if (u.AvatarFile != null && u.Id > 0)
+                {
+                    string wwwPath = environment.WebRootPath;
+                    string path = Path.Combine(wwwPath, "Upload");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                    string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
+                    string pathCompleto = Path.Combine(path, fileName);
+                    u.Avatar = Path.Combine("/Upload", fileName);
+                    using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                    {
+                        u.AvatarFile.CopyTo(stream);
+                    }
+                    repositorio.Modificacion(u);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -78,6 +102,7 @@ namespace Inmobiliaria.Controllers
             }
         }
 
+        // GET: Usuarios/Edit/5
         [Authorize]
         public ActionResult Perfil()
         {
@@ -87,7 +112,7 @@ namespace Inmobiliaria.Controllers
             return View("Edit", u);
         }
 
-        // GET: UsuarioController/Edit/5
+        // GET: Usuarios/Edit/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
@@ -97,9 +122,10 @@ namespace Inmobiliaria.Controllers
             return View(u);
         }
 
-        // POST: UsuarioController/Edit/5
+        // POST: Usuarios/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Usuario u)
         {
             var vista = "Edit";
@@ -113,13 +139,17 @@ namespace Inmobiliaria.Controllers
                     {//si no es admin, solo puede modificarse él mismo
                         return RedirectToAction(nameof(Index), "Home");
                     }
-                    else {
+                    else
+                    {
                         repositorio.Modificacion(usuarioActual);
                         return RedirectToAction(nameof(Index), "Home");
                     }
                 }
-                repositorio.Modificacion(u);
-                return RedirectToAction(nameof(Index));
+                else
+                {
+                    repositorio.Modificacion(u);
+                    return RedirectToAction(nameof(Index));
+                }
             }
             catch(Exception ex)
             {
@@ -128,30 +158,48 @@ namespace Inmobiliaria.Controllers
             }
         }
 
-        // GET: UsuarioController/Delete/5
+        // GET: Usuarios/Delete/5
         [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
-            return View();
+            var u = repositorio.ObtenerPorId(id);
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            return View(u);
         }
 
-        // POST: UsuarioController/Delete/5
+        // POST: Usuarios/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Usuario u)
+        [Authorize(Policy = "Administrador")]
+        public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
                 repositorio.Baja(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch(Exception ex)
+            catch
             {
                 return View();
             }
         }
+        [Authorize]
+        public IActionResult Avatar()
+        {
+            var u = repositorio.ObtenerPorEmail(User.Identity.Name);
+            string fileName = "avatar_" + u.Id + Path.GetExtension(u.Avatar);
+            string wwwPath = environment.WebRootPath;
+            string path = Path.Combine(wwwPath, "Uploads");
+            string pathCompleto = Path.Combine(path, fileName);
+
+            //leer el archivo
+            byte[] fileBytes = System.IO.File.ReadAllBytes(pathCompleto);
+            //devolverlo
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+        }
 
         [AllowAnonymous]
+        // GET: Usuarios/Login/
         public ActionResult Login()
         {
             return View();
@@ -169,7 +217,7 @@ namespace Inmobiliaria.Controllers
                 {
                     string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                         password: login.Clave,
-                        salt: System.Text.Encoding.ASCII.GetBytes(conf["Salt"]),
+                        salt: System.Text.Encoding.ASCII.GetBytes(configuration["Salt"]),
                         prf: KeyDerivationPrf.HMACSHA1,
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));

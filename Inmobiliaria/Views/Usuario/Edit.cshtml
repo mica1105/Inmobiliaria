@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="Id" value="@Model.Id" />
             <div class="form-group">
@@ -50,6 +50,17 @@
                     <span asp-validation-for="RolNombre" class="text-danger"></span>
                 </div>
             }
+        <div class="form-group">
+            <label asp-for="Avatar" class="control-label"></label><br />
+            @if (Model.Avatar != "")
+            {
+                <img src="@Model.Avatar" />
+            }
+            else
+            {
+                <p>Sin avatar</p>
+            }
+        </div>
 
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-success" />

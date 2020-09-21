@@ -26,6 +26,8 @@ namespace Inmobiliaria.Models
 		public string Email { get; set; }
 		[Required, DataType(DataType.Password)]
 		public string Clave { get; set; }
+		public string Avatar { get; set; }
+		public IFormFile AvatarFile { get; set; }
 		public int Rol { get; set; }
 		[Display(Name ="Rol")]
 		public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";

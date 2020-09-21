@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-    public interface IRepositorioPropietario : IRepositorioConEmail<Propietario>
+    public interface IRepositorioPropietario : IRepositorio<Propietario>
     {
         IList<Propietario> BuscarPorNombre(string nombre);
+        Propietario ObtenerPorEmail(string email);
     }
 }

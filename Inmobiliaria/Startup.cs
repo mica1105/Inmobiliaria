@@ -43,10 +43,11 @@ namespace Inmobiliaria
             services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
             services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
             services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
+            services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
             services.AddTransient<IRepositorioPago, RepositorioPago>();
             services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
-
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,28 +8,29 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-    public class RepositorioUsuario : RepositorioBase, IRepositorioUsuario
-    {
-        
+	public class RepositorioUsuario : RepositorioBase, IRepositorioUsuario
+	{
 
-        public RepositorioUsuario(IConfiguration configuration): base(configuration)
-        {
-            
-        }
+
+		public RepositorioUsuario(IConfiguration configuration) : base(configuration)
+		{
+
+		}
 
 		public int Alta(Usuario e)
 		{
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO Usuario (Nombre, Apellido, Email, Clave, Rol) " +
-					$"VALUES (@nombre, @apellido, @email, @clave, @rol);" +
+				string sql = $"INSERT INTO Usuario (Nombre, Apellido, Avatar, Email, Clave, Rol) " +
+					$"VALUES (@nombre, @apellido, @avatar, @email, @clave, @rol);" +
 					"SELECT SCOPE_IDENTITY();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
 					command.Parameters.AddWithValue("@nombre", e.Nombre);
 					command.Parameters.AddWithValue("@apellido", e.Apellido);
+					command.Parameters.AddWithValue("@avatar", e.Avatar);
 					command.Parameters.AddWithValue("@email", e.Email);
 					command.Parameters.AddWithValue("@clave", e.Clave);
 					command.Parameters.AddWithValue("@rol", e.Rol);
@@ -63,13 +64,14 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Email=@email, Rol=@rol " +
+				string sql = $"UPDATE Usuario SET Nombre=@nombre, Apellido=@apellido, Avatar=@avatar, Email=@email, Rol=@rol " +
 					$"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
 					command.Parameters.AddWithValue("@nombre", e.Nombre);
 					command.Parameters.AddWithValue("@apellido", e.Apellido);
+					command.Parameters.AddWithValue("@avatar", e.Avatar);
 					command.Parameters.AddWithValue("@email", e.Email);
 					command.Parameters.AddWithValue("@rol", e.Rol);
 					command.Parameters.AddWithValue("@id", e.Id);
@@ -86,7 +88,7 @@ namespace Inmobiliaria.Models
 			IList<Usuario> res = new List<Usuario>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Email, Clave, Rol" +
+				string sql = $"SELECT Id, Nombre, Apellido, Avatar, Email, Clave, Rol" +
 					$" FROM Usuario";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -100,9 +102,10 @@ namespace Inmobiliaria.Models
 							Id = reader.GetInt32(0),
 							Nombre = reader.GetString(1),
 							Apellido = reader.GetString(2),
-							Email = reader.GetString(3),
-							Clave = reader.GetString(4),
-							Rol = reader.GetInt32(5),
+							Avatar = reader["Avatar"].ToString(),
+							Email = reader.GetString(4),
+							Clave = reader.GetString(5),
+							Rol = reader.GetInt32(6),
 						};
 						res.Add(e);
 					}
@@ -117,7 +120,7 @@ namespace Inmobiliaria.Models
 			Usuario e = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Email, Clave, Rol FROM Usuario" +
+				string sql = $"SELECT Id, Nombre, Apellido, Avatar, Email, Clave, Rol FROM Usuario" +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -132,9 +135,10 @@ namespace Inmobiliaria.Models
 							Id = reader.GetInt32(0),
 							Nombre = reader.GetString(1),
 							Apellido = reader.GetString(2),
-							Email = reader.GetString(3),
-							Clave = reader.GetString(4),
-							Rol = reader.GetInt32(5),
+							Avatar = reader["Avatar"].ToString(),
+							Email = reader.GetString(4),
+							Clave = reader.GetString(5),
+							Rol = reader.GetInt32(6),
 						};
 					}
 					connection.Close();
@@ -148,7 +152,7 @@ namespace Inmobiliaria.Models
 			Usuario e = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Email, Clave, Rol FROM Usuario" +
+				string sql = $"SELECT Id, Nombre, Apellido, Avatar, Email, Clave, Rol FROM Usuario" +
 					$" WHERE Email=@email";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -163,9 +167,10 @@ namespace Inmobiliaria.Models
 							Id = reader.GetInt32(0),
 							Nombre = reader.GetString(1),
 							Apellido = reader.GetString(2),
-							Email = reader.GetString(3),
-							Clave = reader.GetString(4),
-							Rol = reader.GetInt32(5),
+							Avatar = reader["Avatar"].ToString(),
+							Email = reader.GetString(4),
+							Clave = reader.GetString(5),
+							Rol = reader.GetInt32(6),
 						};
 					}
 					connection.Close();
