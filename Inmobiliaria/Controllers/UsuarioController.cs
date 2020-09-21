@@ -78,7 +78,7 @@ namespace Inmobiliaria.Controllers
                 if (u.AvatarFile != null && u.Id > 0)
                 {
                     string wwwPath = environment.WebRootPath;
-                    string path = Path.Combine(wwwPath, "Upload");
+                    string path = Path.Combine(wwwPath, "Uploads");
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -86,7 +86,7 @@ namespace Inmobiliaria.Controllers
                     //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
                     string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
                     string pathCompleto = Path.Combine(path, fileName);
-                    u.Avatar = Path.Combine("/Upload", fileName);
+                    u.Avatar = Path.Combine("/Uploads", fileName);
                     using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
                     {
                         u.AvatarFile.CopyTo(stream);
@@ -141,14 +141,36 @@ namespace Inmobiliaria.Controllers
                     }
                     else
                     {
-                        repositorio.Modificacion(usuarioActual);
-                        return RedirectToAction(nameof(Index), "Home");
+                          repositorio.Modificacion(u);
+                          return RedirectToAction(nameof(Index), "Home");
+                        
                     }
                 }
                 else
                 {
-                    repositorio.Modificacion(u);
-                    return RedirectToAction(nameof(Index));
+                    if (u.AvatarFile != null)
+                    {
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "avatar_" + u.Id + Path.GetExtension(u.AvatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        u.Avatar = Path.Combine("/Uploads", fileName);
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            u.AvatarFile.CopyTo(stream);
+                        }
+                        repositorio.Modificacion(u);
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else {
+                        repositorio.Modificacion(u);
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
             }
             catch(Exception ex)

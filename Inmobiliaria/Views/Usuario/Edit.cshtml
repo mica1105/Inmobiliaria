@@ -50,23 +50,30 @@
                     <span asp-validation-for="RolNombre" class="text-danger"></span>
                 </div>
             }
-        <div class="form-group">
-            <label asp-for="Avatar" class="control-label"></label><br />
+
             @if (Model.Avatar != "")
             {
-                <img src="@Model.Avatar" />
+                <div class="form-group">
+                    <label asp-for="Avatar" class="control-label"></label><br />
+                    <input type="hidden" name="Avatar" value="@Model.Avatar"/>
+                    <img src="@Model.Avatar" />
+                </div>
             }
             else
             {
-                <p>Sin avatar</p>
-            }
-        </div>
+                <div class="form-group">
+                    <label asp-for="AvatarFile" class="control-label"></label>
+                    <input type="file" name="AvatarFile" />
+                    <span asp-validation-for="AvatarFile" class="text-danger"></span>
+                </div>
+             }
 
-            <div class="form-group">
-                <input type="submit" value="Guardar" class="btn btn-success" />
-            </div>
-        </form>
-    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Guardar" class="btn btn-success" />
+                    </div>
+            </form>
+        </div>
 </div>
 
 <div>
