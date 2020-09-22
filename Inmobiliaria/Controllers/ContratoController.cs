@@ -30,8 +30,9 @@ namespace Inmobiliaria.Controllers
             var lista = repositorio.ObtenerTodos();
             return View(lista);
         }
-        [Authorize]
+
         // GET: ContratoController/Create
+        [Authorize]
         public ActionResult Create()
         {
             ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
@@ -42,6 +43,7 @@ namespace Inmobiliaria.Controllers
         // POST: ContratoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Contrato contrato)
         {
             try
@@ -82,6 +84,7 @@ namespace Inmobiliaria.Controllers
         // POST: ContratoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Contrato contrato)
         {
             try
@@ -106,6 +109,7 @@ namespace Inmobiliaria.Controllers
         // POST: ContratoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Contrato contrato)
         {
             try

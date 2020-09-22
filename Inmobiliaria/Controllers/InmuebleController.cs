@@ -34,12 +34,14 @@ namespace Inmobiliaria.Controllers
         public ActionResult Create()
         {
             ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+            ViewBag.Estados = Inmueble.ObtenerEstados();
             return View();
         }
 
         // POST: InmuebleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inmueble inmueble)
         {
             try
@@ -68,6 +70,7 @@ namespace Inmobiliaria.Controllers
         {
             var entidad = repositorio.ObtenerPorId(id);
             ViewBag.Propietarios = repoPropietario.ObtenerTodos();
+            ViewBag.Estados = Inmueble.ObtenerEstados();
             if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];
             if (TempData.ContainsKey("Error"))
@@ -78,6 +81,7 @@ namespace Inmobiliaria.Controllers
         // POST: InmuebleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inmueble inmueble)
         {
             try
@@ -92,6 +96,7 @@ namespace Inmobiliaria.Controllers
         }
 
         // GET: InmuebleController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var i = repositorio.ObtenerPorId(id);

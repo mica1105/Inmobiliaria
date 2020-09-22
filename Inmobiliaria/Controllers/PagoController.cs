@@ -48,6 +48,7 @@ namespace Inmobiliaria.Controllers
         // POST: PagoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Pago pago)
         {
             try
@@ -81,6 +82,7 @@ namespace Inmobiliaria.Controllers
         // POST: PagoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Pago pago)
         {
             try
@@ -105,6 +107,7 @@ namespace Inmobiliaria.Controllers
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Pago pago)
         {
             try

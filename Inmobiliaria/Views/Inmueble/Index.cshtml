@@ -33,6 +33,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.PropietarioId)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EstadoNombre)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -61,10 +64,14 @@
                 @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.EstadoNombre)
+            </td>
+            <td>
                 <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="lnr lnr-pencil"></span></a>
-              @if (User.IsInRole("Administrador")) {
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
-              }
+                @if (User.IsInRole("Administrador"))
+                {
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
+                }
             </td>
         </tr>
 }

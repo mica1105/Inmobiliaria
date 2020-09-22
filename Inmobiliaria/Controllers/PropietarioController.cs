@@ -33,6 +33,7 @@ namespace Inmobiliaria.Controllers
 
 
         // GET: Propietario/Buscar/5
+        [Authorize]
         [Route("[controller]/Buscar/{q}", Name = "Buscar")]
         public IActionResult Buscar(string q)
         {
@@ -57,6 +58,7 @@ namespace Inmobiliaria.Controllers
         // POST: Propietario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Propietario propietario)
         { 
 
@@ -82,6 +84,7 @@ namespace Inmobiliaria.Controllers
         // POST: Propietario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Propietario propietario)
         {
             try
@@ -106,6 +109,7 @@ namespace Inmobiliaria.Controllers
         // POST: Propietario/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario entidad)
         {
             try

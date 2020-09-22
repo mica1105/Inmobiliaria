@@ -142,8 +142,12 @@ namespace Inmobiliaria.Controllers
                     else
                     {
                           repositorio.Modificacion(u);
-                          return RedirectToAction(nameof(Index), "Home");
-                        
+                        if (u.Email != usuarioActual.Email) {
+                            Logout();
+                            return RedirectToAction(nameof(Index), "Home");
+                        } else {
+                            return RedirectToAction(nameof(Index), "Home");
+                        }
                     }
                 }
                 else

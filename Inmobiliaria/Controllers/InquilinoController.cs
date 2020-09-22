@@ -53,6 +53,7 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Inquilino inquilino)
         {
             try
@@ -77,6 +78,7 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Edit(int id, Inquilino inquilino)
         {
           
@@ -102,6 +104,7 @@ namespace Inmobiliaria.Controllers
         // POST: Inquilino/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino inquilino)
         {
             try
