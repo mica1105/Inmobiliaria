@@ -14,7 +14,7 @@
             <div class="container d-flex flex-column flex-md-row justify-content-between">
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/logo2.png"></a>
+                    <a class="navbar-brand btn btn-outline-info" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/logo2.png"></a>
                     <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="lnr lnr-enter"></i>Acceder</a>
                 }
                 else
