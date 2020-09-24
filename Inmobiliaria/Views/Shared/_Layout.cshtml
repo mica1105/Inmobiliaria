@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Inmobiliaria</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/site.css"/>
     <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
 </head>
 <body>
@@ -14,14 +14,14 @@
             <div class="container d-flex flex-column flex-md-row justify-content-between">
                 @if (!User.Identity.IsAuthenticated)
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/Logo.jpg"></a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/logo2.png"></a>
                     <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="lnr lnr-enter"></i>Acceder</a>
                 }
                 else
                 {
                     <div class="dropdown">
                         <a class="btn btn-outline-info dropdown-toggle font-weight-bold" href="#" role="button" id="homeMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
-                            <img class="my-0" width="180" src="~/img/Logo.jpg">
+                            <img class="my-0" width="180" src="~/img/logo2.png">
                         </a>
                         <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="lnr lnr-home"></i> Inicio</a>

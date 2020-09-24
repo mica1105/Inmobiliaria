@@ -1,25 +1,36 @@
 ﻿@model Inmobiliaria.Models.LoginView
 
-<h4>Acceso</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-controller="Usuario" asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Usuario" class="control-label"></label>
-                <input asp-for="Usuario" class="form-control" />
-                <span asp-validation-for="Usuario" class="text-danger"></span>
+
+<div class="container h-100">
+    <div class="d-flex justify-content-center h-100">
+        <div class="card text-white bg-secondary mb-3" style="max-width: 100rem;">
+            <img class="card-img-top" src="~/img/logo2.png"  alt="Logo"/>
+            <div class="d-flex justify-content-center mt-3">
+                <h2 class="card-header">Iniciar Sesión</h2>
             </div>
-            <div class="form-group">
-                <label asp-for="Clave" class="control-label"></label>
-                <input asp-for="Clave" class="form-control" />
-                <span asp-validation-for="Clave" class="text-danger"></span>
+            <div class="card-body">
+                <form asp-controller="Usuario" asp-action="Login">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="lnr lnr-user"></i></span>
+                        </div>
+                        <input asp-for="Usuario" class="form-control" placeholder="Usuario" />
+                        <span asp-validation-for="Usuario" class="text-danger"></span>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-append">
+                            <span class="input-group-text"><i class="lnr lnr-lock"></i></span>
+                        </div>
+                        <input asp-for="Clave" class="form-control" placeholder="Contraseña" />
+                        <span asp-validation-for="Clave" class="text-danger"></span>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <input type="submit" value="Entrar" class="btn btn-primary" />
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Entrar" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
