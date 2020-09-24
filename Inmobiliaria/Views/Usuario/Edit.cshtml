@@ -23,11 +23,18 @@
                 <input asp-for="Apellido" class="form-control" />
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
+            @if (User.Identity.Name == Model.Email)
+            {
+                <input type="hidden" name="Email" value="@Model.Email" />
+            }
+            else
+            {
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            }
             @if (User.IsInRole("Administrador"))
             {
                 <div class="form-group">
@@ -55,7 +62,7 @@
             {
                 <div class="form-group">
                     <label asp-for="Avatar" class="control-label"></label><br />
-                    <input type="hidden" name="Avatar" value="@Model.Avatar"/>
+                    <input type="hidden" name="Avatar" value="@Model.Avatar" />
                     <img src="@Model.Avatar" />
                 </div>
             }
@@ -66,13 +73,13 @@
                     <input type="file" name="AvatarFile" />
                     <span asp-validation-for="AvatarFile" class="text-danger"></span>
                 </div>
-             }
+            }
 
 
-                    <div class="form-group">
-                        <input type="submit" value="Guardar" class="btn btn-success" />
-                    </div>
-            </form>
+            <div class="form-group">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+            </div>
+        </form>
         </div>
 </div>
 

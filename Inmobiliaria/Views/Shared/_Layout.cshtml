@@ -41,9 +41,12 @@
                             <i class="lnr lnr-user"></i> @User.Identity.Name
                         </a>
                         <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a>
-                            <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
-                        </div>
+                            @if (!User.IsInRole("Administrador"))
+                            {
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a>
+                            }
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                            </div>
                     </div>
                 }
             </div>

@@ -116,7 +116,7 @@ namespace Inmobiliaria.Controllers
         [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
-            ViewData["Title"] = "Editar usuario";
+            ViewData["Title"] = "Editar Usuario";
             var u = repositorio.ObtenerPorId(id);
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(u);
@@ -226,8 +226,9 @@ namespace Inmobiliaria.Controllers
 
         [AllowAnonymous]
         // GET: Usuarios/Login/
-        public ActionResult Login()
+        public ActionResult Login(string returnUrl)
         {
+            TempData["returnUrl"] = returnUrl;
             return View();
         }
 
@@ -239,6 +240,7 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
+                var returnUrl = String.IsNullOrEmpty(TempData["returnUrl"] as string) ? "/Home" : TempData["returnUrl"].ToString();
                 if (ModelState.IsValid)
                 {
                     string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
@@ -252,6 +254,7 @@ namespace Inmobiliaria.Controllers
                     if (e == null || e.Clave != hashed)
                     {
                         ModelState.AddModelError("", "El email o la clave no son correctos");
+                        TempData["returnUrl"] = returnUrl;
                         return View();
                     }
 
@@ -269,8 +272,10 @@ namespace Inmobiliaria.Controllers
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity));
 
-                    return RedirectToAction(nameof(Index), "Home");
+                    TempData.Remove("returnUrl");
+                    return Redirect(returnUrl);
                 }
+                TempData["returnUrl"] = returnUrl;
                 return View();
             }
             catch (Exception ex)
