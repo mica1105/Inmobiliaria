@@ -13,9 +13,11 @@ namespace Inmobiliaria.Models
         [Display(Name = "Código")]
         public int Id { get; set; }
         [Required] [Display(Name ="Inicia")]
+        [DataType(DataType.Date)]
         public DateTime FechaInicio { get; set; }
         [Required]
         [Display(Name = "Finaliza")]
+        [DataType(DataType.Date)]
         public DateTime FechaFin { get; set; }
         [Required]
         public Decimal Precio { get; set; }

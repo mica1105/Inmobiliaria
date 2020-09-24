@@ -14,7 +14,7 @@ namespace Inmobiliaria.Models
 		public int Id { get; set; }
 		[Required] [Display(Name ="Nro de Pago")]
 		public int NroPago { get; set; }
-		[Required]
+		[Required][DataType(DataType.Date)]
 		public DateTime Fecha { get; set; }
 		[Required]
 		public decimal Importe { get; set; }

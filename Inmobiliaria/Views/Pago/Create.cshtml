@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Crear";
     Contrato contrato = ViewBag.Contrato;
+    int pago = ViewBag.Pago + 1;
 }
 
 <h1>Registrar</h1>
@@ -15,12 +16,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NroPago" class="control-label"></label>
-                <input asp-for="NroPago" class="form-control" />
+                 <input asp-for="NroPago" class="form-control" value="@pago" readonly/>
                 <span asp-validation-for="NroPago" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Fecha" class="control-label"></label>
+               
                 <input asp-for="Fecha" class="form-control" />
+                
                 <span asp-validation-for="Fecha" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -37,6 +40,6 @@
 </div>
 
 <div>
-    <a class="btn btn-primary" asp-action="Index">Volver</a>
+    <a class="btn btn-primary" asp-action="Index" asp-route-id="@contrato.Id">Volver</a>
 </div>
 

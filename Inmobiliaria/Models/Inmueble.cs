@@ -33,27 +33,18 @@ namespace Inmobiliaria.Models
         public Propietario Duenio { get; set; }
         public int Estado { get; set; }
         [Display(Name = "Estado")]
-        public string EstadoNombre => Estado > 0 ? ((enEstados)Estado).ToString() : "";
+        public string EstadoNombre => Estado > 0 ? ((enEstados)Estado).ToString().Replace('_',' ') : "";
         public static IDictionary<int, string> ObtenerEstados()
         {
             SortedDictionary<int, string> estados = new SortedDictionary<int, string>();
             Type tipoEnumEstados = typeof(enEstados);
             foreach (var valor in Enum.GetValues(tipoEnumEstados))
             {
-                estados.Add((int)valor, Enum.GetName(tipoEnumEstados, valor));
+                estados.Add((int)valor, Enum.GetName(tipoEnumEstados, valor).Replace('_', ' '));
             }
             return estados;
         }
-        /* public static IDictionary<int, string> ObtenerRoles()
-        {
-            SortedDictionary<int, string> roles = new SortedDictionary<int, string>();
-            Type tipoEnumRol = typeof(enRoles);
-            foreach (var valor in Enum.GetValues(tipoEnumRol))
-            {
-                roles.Add((int)valor, Enum.GetName(tipoEnumRol, valor));
-            }
-            return roles;
-        }*/
+        
     }
 }
 

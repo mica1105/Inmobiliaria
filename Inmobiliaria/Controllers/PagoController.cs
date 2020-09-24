@@ -41,6 +41,8 @@ namespace Inmobiliaria.Controllers
         [Authorize]
         public ActionResult Create(int id)
         {
+            var pagos = repositorio.ObtenerTodos(id);
+            ViewBag.Pago= pagos.Count();
             ViewBag.Contrato = repoContrato.ObtenerPorId(id);
             return View();
         }
@@ -112,6 +114,7 @@ namespace Inmobiliaria.Controllers
         {
             try
             {
+                var contrato = pago.ContratoId;
                 repositorio.Baja(id);
                 return RedirectToAction("Index", "Contrato");
             }
