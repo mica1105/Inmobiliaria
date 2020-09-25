@@ -12,15 +12,15 @@
                 <form asp-controller="Usuario" asp-action="Login">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-3">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="lnr lnr-user"></i></span>
+                        <div class="input-group-append" style="font-size: 0.5rem;">
+                            <span class="input-group-text"><i class="fas fa-user-circle fa-lg"></i></span>
                         </div>
                         <input asp-for="Usuario" class="form-control" placeholder="Usuario" />
                         <span asp-validation-for="Usuario" class="text-danger"></span>
                     </div>
                     <div class="input-group mb-2">
-                        <div class="input-group-append">
-                            <span class="input-group-text"><i class="lnr lnr-lock"></i></span>
+                        <div class="input-group-append" style="font-size: 0.5rem;">
+                            <span class="input-group-text"><i class="fas fa-key fa-lg"></i></span>
                         </div>
                         <input asp-for="Clave" class="form-control" placeholder="Contraseña" />
                         <span asp-validation-for="Clave" class="text-danger"></span>

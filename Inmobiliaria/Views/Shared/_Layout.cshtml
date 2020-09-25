@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Inmobiliaria</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css"/>
-    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/fontawesome-free-5.14.0-web/css/all.min.css" />
+    <script defer src="~/lib/fontawesome-free-5.14.0-web/js/all.min.js"></script>
 </head>
 <body>
     <header>
@@ -15,7 +16,7 @@
                 @if (!User.Identity.IsAuthenticated)
                 {
                     <a class="navbar-brand btn btn-outline-info" asp-area="" asp-controller="Home" asp-action="Index"><img class="my-0" width="200" src="~/img/logo2.png"></a>
-                    <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="lnr lnr-enter"></i>Acceder</a>
+                    <a class="btn btn-outline-primary py-2 d-none d-md-inline-block float-right font-weight-bold" href="@Url.Link("login", null)"><i class="fas fa-sign-in-alt"></i>&ensp;Acceder</a>
                 }
                 else
                 {
@@ -24,28 +25,28 @@
                             <img class="my-0" width="180" src="~/img/logo2.png">
                         </a>
                         <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="lnr lnr-home"></i> Inicio</a>
-                            <a class="dropdown-item" asp-controller="Home" asp-action="Privacy"><i class="lnr lnr-layers"></i> Claims</a>
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i>&ensp; Inicio</a>
+                            <a class="dropdown-item" asp-controller="Home" asp-action="Privacy"><i class="fas fa-user-lock"></i>&ensp; Claims</a>
                         </div>
                     </div>
                     @if (User.IsInRole("Administrador"))
                     {
-                     <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="lnr lnr-users"></i> Usuarios</a>
+                     <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fas fa-users"></i>&ensp; Usuarios</a>
                     }
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Propietario" asp-action="Index"><span class="lnr lnr-mustache"></span> Propietarios</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inquilino" asp-action="Index"><span class="lnr lnr-smile"></span> Inquilinos</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inmueble" asp-action="Index"><span class="lnr lnr-apartment"></span> Inmuebles</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Contrato" asp-action="Index"><span class="lnr lnr-license"></span> Alquileres</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fas fa-user-tie"></i>&ensp; Propietarios</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fas fa-house-user"></i>&ensp; Inquilinos</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fas fa-building"></i>&ensp; Inmuebles</a>
+                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fas fa-file-contract"></i>&ensp; Alquileres</a>
                     <div class="dropdown">
                         <a class="btn btn-outline-primary dropdown-toggle font-weight-bold" href="#" role="button" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
-                            <i class="lnr lnr-user"></i> @User.Identity.Name
+                            <i class="far fa-user"></i>&ensp; @User.Identity.Name
                         </a>
                         <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
                             @if (!User.IsInRole("Administrador"))
                             {
-                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="lnr lnr-user"></i> Perfil</a>
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="far fa-address-card"></i>&ensp; Perfil</a>
                             }
-                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="lnr lnr-exit"></i> Salir</a>
+                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="fas fa-sign-out-alt"></i>&ensp; Salir</a>
                             </div>
                     </div>
                 }
@@ -65,7 +66,6 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>
