@@ -56,11 +56,11 @@
                 @(item.Inquilino.Nombre + " " + item.Inquilino.Apellido)
             </td>
             <td>
-                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="lnr lnr-pencil"></span></a>
-                <a class="btn btn-outline-info" asp-controller="Pago" asp-action="Index" asp-route-id="@item.Id" title="Pagos"><span class="lnr lnr-list"></span></a>
+                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
+                <a class="btn btn-outline-info" asp-controller="Pago" asp-action="Index" asp-route-id="@item.Id" title="Pagos"><i class="fas fa-money-check-alt"></i></a>
                 @if (User.IsInRole("Administrador"))
                 {
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
+                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                 }
             </td>
         </tr>

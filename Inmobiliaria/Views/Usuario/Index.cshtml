@@ -57,10 +57,10 @@
                 @Html.DisplayFor(modelItem => item.RolNombre)
             </td>
             <td>
-                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><span class="lnr lnr-pencil"></span></a>
+                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="fas fa-user-edit"></i></a>
                 @if (User.IsInRole("Administrador"))
                 {
-                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><span class="lnr lnr-trash"></span></a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="fas fa-user-times"></i></a>
                 }
             </td>
         </tr>
