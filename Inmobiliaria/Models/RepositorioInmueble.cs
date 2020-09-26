@@ -202,5 +202,85 @@ namespace Inmobiliaria.Models
 			}
 			return res;
 		}
+		public IList<Inmueble> ObtenerPorEstado() {
+			IList<Inmueble> res = new List<Inmueble>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+					" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
+					" WHERE Estado = 1";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Inmueble entidad = new Inmueble
+						{
+							Id = reader.GetInt32(0),
+							Direccion = reader.GetString(1),
+							Tipo = reader.GetString(2),
+							Ambientes = reader.GetInt32(3),
+							Uso = reader.GetString(4),
+							Precio = reader.GetDecimal(5),
+							Estado = reader.GetInt32(6),
+							PropietarioId = reader.GetInt32(7),
+							Duenio = new Propietario
+							{
+								Id = reader.GetInt32(7),
+								Nombre = reader.GetString(8),
+								Apellido = reader.GetString(9),
+							}
+						};
+						res.Add(entidad);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
+		public IList<Inmueble> BuscarPorFechas(DateTime ingreso, DateTime salida) {
+			List<Inmueble> res = new List<Inmueble>();
+			Inmueble entidad = null;
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id LEFT JOIN Contrato c ON i.Id= c.InmuebleId " +
+					$" WHERE FechaInicio > @salida OR FechaFin < @ingreso OR c.Id IS NULL";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@ingreso", SqlDbType.Date).Value = ingreso;
+					command.Parameters.Add("@salida", SqlDbType.Date).Value = salida;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						entidad = new Inmueble
+						{
+							Id = reader.GetInt32(0),
+							Direccion = reader.GetString(1),
+							Tipo = reader.GetString(2),
+							Ambientes = reader.GetInt32(3),
+							Uso = reader.GetString(4),
+							Precio = reader.GetDecimal(5),
+							Estado = reader.GetInt32(6),
+							PropietarioId = reader.GetInt32(7),
+							Duenio = new Propietario
+							{
+								Id = reader.GetInt32(7),
+								Nombre = reader.GetString(8),
+								Apellido = reader.GetString(9),
+							}
+						};
+						res.Add(entidad);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
 	}
 }
+

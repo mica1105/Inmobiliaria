@@ -8,5 +8,7 @@ namespace Inmobiliaria.Models
     public interface IRepositorioInmueble : IRepositorio<Inmueble>
     {
         IList<Inmueble> BuscarPorPropietario(int idPropietario);
+        IList<Inmueble> ObtenerPorEstado();
+        IList<Inmueble> BuscarPorFechas(DateTime ingreso, DateTime salida);
     }
 }

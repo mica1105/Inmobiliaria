@@ -46,7 +46,7 @@ namespace Inmobiliaria
             services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
             services.AddTransient<IRepositorioPago, RepositorioPago>();
-            services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
+            services.AddTransient<IRepositorioContrato, RepositorioContrato>();
            
         }
 

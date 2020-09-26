@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-    public class RepositorioContrato : RepositorioBase, IRepositorio<Contrato>
+    public class RepositorioContrato : RepositorioBase, IRepositorioContrato
     {
 		
-
         public RepositorioContrato(IConfiguration configuration) : base(configuration)
         {
 			
@@ -164,6 +163,91 @@ namespace Inmobiliaria.Models
 			}
 			return entidad;
 		}
-
+		public IList<Contrato> BuscarPorInmueble(int idInmueble)
+		{
+			IList<Contrato> res = new List<Contrato>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = "SELECT c.Id, FechaInicio, FechaFin, c.Precio, InmuebleId, p.Direccion, InquilinoId, i.Nombre, i.Apellido" +
+					" FROM contrato c INNER JOIN inquilino i ON c.InquilinoId = i.Id INNER JOIN inmueble p ON c.InmuebleId = p.Id" +
+					" WHERE c.InmuebleId=@idInmueble";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@idInmueble", SqlDbType.Int).Value = idInmueble;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato entidad = new Contrato
+						{
+							Id = reader.GetInt32(0),
+							FechaInicio = reader.GetDateTime(1),
+							FechaFin = reader.GetDateTime(2),
+							Precio = reader.GetDecimal(3),
+							InmuebleId = reader.GetInt32(4),
+							Inmueble = new Inmueble
+							{
+								Id = reader.GetInt32(4),
+								Direccion = reader.GetString(5),
+							},
+							InquilinoId = reader.GetInt32(6),
+							Inquilino = new Inquilino
+							{
+								Id = reader.GetInt32(6),
+								Nombre = reader.GetString(7),
+								Apellido = reader.GetString(8),
+							}
+						};
+						res.Add(entidad);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
+		public IList<Contrato> ContradosVigentes(DateTime fecha) {
+			IList<Contrato> res = new List<Contrato>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = "SELECT c.Id, FechaInicio, FechaFin, c.Precio, InmuebleId, p.Direccion, InquilinoId, i.Nombre, i.Apellido" +
+					" FROM contrato c INNER JOIN inquilino i ON c.InquilinoId = i.Id INNER JOIN inmueble p ON c.InmuebleId = p.Id" +
+					" WHERE @fecha BETWEEN FechaInicio AND FechaFin ";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@fecha", SqlDbType.Date).Value = fecha.Date;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato entidad = new Contrato
+						{
+							Id = reader.GetInt32(0),
+							FechaInicio = reader.GetDateTime(1),
+							FechaFin = reader.GetDateTime(2),
+							Precio = reader.GetDecimal(3),
+							InmuebleId = reader.GetInt32(4),
+							Inmueble = new Inmueble
+							{
+								Id = reader.GetInt32(4),
+								Direccion = reader.GetString(5),
+							},
+							InquilinoId = reader.GetInt32(6),
+							Inquilino = new Inquilino
+							{
+								Id = reader.GetInt32(6),
+								Nombre = reader.GetString(7),
+								Apellido = reader.GetString(8),
+							}
+						};
+						res.Add(entidad);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
+		
 	}
 }

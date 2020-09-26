@@ -12,11 +12,11 @@ namespace Inmobiliaria.Controllers
 {
     public class ContratoController : Controller
     {
-        private IRepositorio<Contrato> repositorio;
+        private IRepositorioContrato repositorio;
         private readonly IRepositorioInmueble repoInmueble;
         private readonly IRepositorio<Inquilino> repoInquilino;
 
-        public ContratoController(IRepositorio<Contrato> repositorio, IRepositorioInmueble repositorioInmueble,IRepositorio<Inquilino> repositorioInquilino)
+        public ContratoController(IRepositorioContrato repositorio, IRepositorioInmueble repositorioInmueble,IRepositorio<Inquilino> repositorioInquilino)
         {
             this.repositorio = repositorio;
             repoInmueble = repositorioInmueble;
