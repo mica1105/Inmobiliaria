@@ -31,12 +31,42 @@ namespace Inmobiliaria.Controllers
             return View(lista);
         }
 
+        public ActionResult PorInmueble(int id)
+        {
+            try
+            {
+                var lista = repositorio.BuscarPorInmueble(id);
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        public ActionResult Vigentes()
+        {
+            try
+            {
+                var hoy = DateTime.Now;
+                var lista = repositorio.ContradosVigentes(hoy);
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         // GET: ContratoController/Create
         [Authorize]
-        public ActionResult Create()
+        public ActionResult Create(string desde, string hasta)
         {
+            DateTime inicio = DateTime.Parse(desde);
+            DateTime fin = DateTime.Parse(hasta);
+            ViewBag.Desde = inicio;
+            ViewBag.Hasta = fin;
             ViewBag.Inquilinos = repoInquilino.ObtenerTodos();
-            ViewBag.Inmuebles = repoInmueble.ObtenerTodos();
+            ViewBag.Inmuebles = repoInmueble.BuscarPorFechas(inicio,fin);
             return View();
         }
 

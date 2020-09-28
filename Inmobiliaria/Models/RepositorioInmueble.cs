@@ -161,7 +161,7 @@ namespace Inmobiliaria.Models
 			}
 			return entidad;
 		}
-		public IList<Inmueble> BuscarPorPropietario(int idPropietario)
+		public IList<Inmueble> BuscarPorPropietario(int id)
 		{
 			List<Inmueble> res = new List<Inmueble>();
 			Inmueble entidad = null;
@@ -169,10 +169,10 @@ namespace Inmobiliaria.Models
 			{
 				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
-					$" WHERE PropietarioId=@idPropietario";
+					$" WHERE PropietarioId = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
-					command.Parameters.Add("@idPropietario", SqlDbType.Int).Value = idPropietario;
+					command.Parameters.Add("@id", SqlDbType.Int).Value = id;
 					command.CommandType = CommandType.Text;
 					connection.Open();
 					var reader = command.ExecuteReader();
@@ -245,13 +245,13 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, i.Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id LEFT JOIN Contrato c ON i.Id= c.InmuebleId " +
 					$" WHERE FechaInicio > @salida OR FechaFin < @ingreso OR c.Id IS NULL";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
-					command.Parameters.Add("@ingreso", SqlDbType.Date).Value = ingreso;
-					command.Parameters.Add("@salida", SqlDbType.Date).Value = salida;
+					command.Parameters.Add("@ingreso", SqlDbType.Date).Value = ingreso.Date;
+					command.Parameters.Add("@salida", SqlDbType.Date).Value = salida.Date;
 					command.CommandType = CommandType.Text;
 					connection.Open();
 					var reader = command.ExecuteReader();

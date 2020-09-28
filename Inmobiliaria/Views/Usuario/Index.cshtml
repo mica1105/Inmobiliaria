@@ -51,7 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                <img width="32" src="@item.Avatar"/>
+               <a asp-action="Avatar" asp-route-id="@item.Id" title="Avatar"><img width="32" src="@item.Avatar" /></a> 
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.RolNombre)

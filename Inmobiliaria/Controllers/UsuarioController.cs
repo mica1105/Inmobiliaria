@@ -210,18 +210,22 @@ namespace Inmobiliaria.Controllers
             }
         }
         [Authorize]
-        public IActionResult Avatar()
+        public IActionResult Avatar(int id)
         {
-            var u = repositorio.ObtenerPorEmail(User.Identity.Name);
-            string fileName = "avatar_" + u.Id + Path.GetExtension(u.Avatar);
-            string wwwPath = environment.WebRootPath;
-            string path = Path.Combine(wwwPath, "Uploads");
-            string pathCompleto = Path.Combine(path, fileName);
-
-            //leer el archivo
-            byte[] fileBytes = System.IO.File.ReadAllBytes(pathCompleto);
-            //devolverlo
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+            try
+            {
+                var u = repositorio.ObtenerPorId(id);
+                var stream = System.IO.File.Open(
+                    Path.Combine(environment.WebRootPath, u.Avatar.Substring(1)),
+                    FileMode.Open,
+                    FileAccess.Read);
+                var ext = Path.GetExtension(u.Avatar);
+                return new FileStreamResult(stream, $"image/{ext.Substring(1)}");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [AllowAnonymous]

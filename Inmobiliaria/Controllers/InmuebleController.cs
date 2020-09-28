@@ -29,6 +29,48 @@ namespace Inmobiliaria.Controllers
             return View(lista);
         }
 
+        public ActionResult Disponibles(IFormCollection collection)
+        {
+            try
+            {
+                DateTime desde = DateTime.Parse(collection["Desde"]);
+                DateTime hasta = DateTime.Parse(collection["Hasta"]);
+                var lista = repositorio.BuscarPorFechas(desde,hasta);
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public ActionResult Activos()
+        {
+            try
+            {
+                var lista = repositorio.ObtenerPorEstado();
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        [Authorize]
+        public ActionResult InmueblesPorPropietario(int id)
+        {
+            try
+            {
+                var lista = repositorio.BuscarPorPropietario(id);
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         // GET: InmuebleController/Create
         [Authorize]
         public ActionResult Create()

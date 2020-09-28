@@ -34,17 +34,16 @@ namespace Inmobiliaria.Controllers
 
         // GET: Propietario/Buscar/5
         [Authorize]
-        [Route("[controller]/Buscar/{q}", Name = "Buscar")]
-        public IActionResult Buscar(string q)
+        public ActionResult Buscar(string q)
         {
             try
             {
-                var res = repositorio.BuscarPorNombre(q);
-                return Json(new { Datos = res });
+                var lista = repositorio.BuscarPorNombre(q);
+                return View("Index", lista);
             }
             catch (Exception ex)
             {
-                return Json(new { Error = ex.Message });
+                throw;
             }
         }
 

@@ -29,29 +29,29 @@
                             <a class="dropdown-item" asp-controller="Home" asp-action="Privacy"><i class="fas fa-user-lock"></i>&ensp; Claims</a>
                         </div>
                     </div>
-                    @if (User.IsInRole("Administrador"))
-                    {
-                     <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fas fa-users"></i>&ensp; Usuarios</a>
-                    }
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fas fa-user-tie"></i>&ensp; Propietarios</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fas fa-house-user"></i>&ensp; Inquilinos</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fas fa-building"></i>&ensp; Inmuebles</a>
-                    <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fas fa-file-contract"></i>&ensp; Alquileres</a>
-                    <div class="dropdown">
-                        <a class="btn btn-outline-primary dropdown-toggle font-weight-bold" href="#" role="button" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
-                            <i class="far fa-user"></i>&ensp; @User.Identity.Name
-                        </a>
-                        <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
-                            @if (!User.IsInRole("Administrador"))
-                            {
-                                <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="far fa-address-card"></i>&ensp; Perfil</a>
-                            }
+                        @if (User.IsInRole("Administrador"))
+                        {
+                            <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Usuario" asp-action="Index"><i class="fas fa-users"></i>&ensp; Usuarios</a>
+                        }
+                        <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Propietario" asp-action="Index"><i class="fas fa-user-tie"></i>&ensp; Propietarios</a>
+                        <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inquilino" asp-action="Index"><i class="fas fa-house-user"></i>&ensp; Inquilinos</a>
+                        <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Inmueble" asp-action="Index"><i class="fas fa-building"></i>&ensp; Inmuebles</a>
+                        <a class="py-2 d-none d-md-inline-block text-black-50 font-weight-bold" asp-area="" asp-controller="Contrato" asp-action="Index"><i class="fas fa-file-contract"></i>&ensp; Alquileres</a>
+                        <div class="dropdown">
+                            <a class="btn btn-outline-primary dropdown-toggle font-weight-bold" href="#" role="button" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent" data-display="static">
+                                <i class="far fa-user"></i>&ensp; @User.Identity.Name
+                            </a>
+                            <div class="dropdown-menu bg-info" aria-labelledby="dropdownMenuLink">
+                                @if (!User.IsInRole("Administrador"))
+                                {
+                                    <a class="dropdown-item" asp-controller="Usuario" asp-action="Perfil"><i class="far fa-address-card"></i>&ensp; Perfil</a>
+                                }
                                 <a class="dropdown-item" asp-controller="Usuario" asp-action="Logout"><i class="fas fa-sign-out-alt"></i>&ensp; Salir</a>
                             </div>
-                    </div>
+                        </div>
                 }
             </div>
-        </nav>
+            </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">

@@ -4,8 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Propietarios</h1>
-
+<nav class="navbar navbar-light bg-light justify-content-between">
+    <a class="navbar-brand">Propietarios</a>
+    <form asp-action="Buscar" method="get" class="form-inline">
+        <input class="form-control mr-sm-2" name="q" type="search" placeholder="Nombre" aria-label="Search">
+        <input type="submit" value="Buscar" class="btn btn-outline-success my-2 my-sm-0" >
+    </form>
+</nav>
 <p>
     <a class="btn btn-primary" asp-action="Create">Registrar</a>
 </p>
@@ -34,33 +39,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dni)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Telefono)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
-            @if (User.IsInRole("Administrador")) {
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
-            }
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dni)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Telefono)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
+                    @if (User.IsInRole("Administrador"))
+                    {
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                    }
+                    <a class="btn btn-outline-secondary" asp-controller="Inmueble" asp-action="InmueblesPorPropietario" asp-route-id="@item.Id" title="Inmuebles"><i class="fas fa-building"></i></a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
