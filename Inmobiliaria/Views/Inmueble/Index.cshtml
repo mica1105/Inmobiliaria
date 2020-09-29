@@ -14,18 +14,18 @@
             <li class="nav-item active">
                 <a class="nav-link" asp-action="Activos">Habilitados</a>
             </li>
+            <li class="nav-item active">
+                <a class="btn btn-outline-primary" asp-action="Create">Registrar</a>
+            </li>
         </ul>
         <form asp-action="Disponibles" class="form-inline my-2 my-lg-0">
             Desde:<input class="form-control mr-sm-2" name="Desde" type="date">
             Hasta:<input class="form-control mr-sm-2" name="Hasta" type="date">
-            <input type="submit" value="Buscar Disponible" class="btn btn-outline-success my-2 my-sm-0">
+            <input type="submit" value="Buscar Disponible" class="btn btn-outline-primary my-2 my-sm-0">
         </form>
     </div>
 </nav>
 
-<p>
-    <a class="btn btn-primary" asp-action="Create">Registrar</a>
-</p>
 <table class="table">
     <thead class="thead-dark">
         <tr>

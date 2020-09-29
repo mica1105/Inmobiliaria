@@ -1,19 +1,21 @@
 ﻿@model IEnumerable<Inmobiliaria.Models.Propietario>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Propietarios";
 }
 
 <nav class="navbar navbar-light bg-light justify-content-between">
-    <a class="navbar-brand">Propietarios</a>
+    <a class="navbar-brand" asp-action="Index">Propietarios</a>
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+            <a class="btn btn-outline-primary" asp-action="Create">Registrar</a>
+        </li>
+    </ul>  
     <form asp-action="Buscar" method="get" class="form-inline">
-        <input class="form-control mr-sm-2" name="q" type="search" placeholder="Nombre" aria-label="Search">
-        <input type="submit" value="Buscar" class="btn btn-outline-success my-2 my-sm-0" >
+        <input class="form-control mr-sm-2" name="q" type="search" placeholder="Nombre o Email" aria-label="Search">
+        <input type="submit" value="Buscar" class="btn btn-outline-success my-2 my-sm-0">
     </form>
 </nav>
-<p>
-    <a class="btn btn-primary" asp-action="Create">Registrar</a>
-</p>
 <table class="table">
     <thead class="thead-dark">
         <tr>

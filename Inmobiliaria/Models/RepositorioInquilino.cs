@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Inmobiliaria.Models
 {
-	public class RepositorioInquilino  : RepositorioBase, IRepositorio<Inquilino>
+	public class RepositorioInquilino  : RepositorioBase, IRepositorioInquilino
 	{
 		
         public RepositorioInquilino(IConfiguration configuration): base(configuration)
@@ -159,6 +159,43 @@ namespace Inmobiliaria.Models
 				}
 			}
 			return e;
+		}
+		public IList<Inquilino> BuscarPorNombre(string nombre)
+		{
+			IList<Inquilino> res = new List<Inquilino>();
+			Inquilino i = null;
+			nombre = "%" + nombre + "%";
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, LugarTrabajo, Telefono, Email, NombreGarante, DniGarante, TelefonoGarante" +
+					$" FROM Inquilino WHERE Nombre LIKE @nombre OR Apellido LIKE @nombre";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@nombre", SqlDbType.VarChar).Value = nombre;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						i = new Inquilino
+						{
+							Id = reader.GetInt32(0),
+							Nombre = reader.GetString(1),
+							Apellido = reader.GetString(2),
+							Dni = reader.GetString(3),
+							LugarTrabajo = reader.GetString(4),
+							Telefono = reader.GetString(5),
+							Email = reader.GetString(6),
+							NombreGarante = reader.GetString(7),
+							DniGarante = reader.GetString(8),
+							TelefonoGarante = reader.GetString(9),
+						};
+						res.Add(i);
+					}
+					connection.Close();
+				}
+			}
+			return res;
 		}
 	}
 }

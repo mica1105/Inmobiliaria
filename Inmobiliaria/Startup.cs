@@ -41,7 +41,7 @@ namespace Inmobiliaria
             });
             services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
             services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
-            services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
+            services.AddTransient<IRepositorioInquilino, RepositorioInquilino>();
             services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
             services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();

@@ -33,7 +33,29 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var usuarios = repositorio.ObtenerTodos();
+            ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             return View(usuarios);
+        }
+        public ActionResult Buscar(string q)
+        {
+            try
+            {
+                var usuario = repositorio.ObtenerPorEmail(q);
+                if (usuario == null)
+                {
+                    TempData["Mensaje"] = "No se han encontrado propietarios con ese nombre";
+                    return RedirectToAction(nameof(Index));
+                }
+                return View("Details", usuario);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View();
+            }
         }
 
         // GET: Usuarios/Details/5
@@ -93,10 +115,13 @@ namespace Inmobiliaria.Controllers
                     }
                     repositorio.Modificacion(u);
                 }
+                TempData["Id"] = u.Id;
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
                 ViewBag.Roles = Usuario.ObtenerRoles();
                 return View();
             }
@@ -108,6 +133,10 @@ namespace Inmobiliaria.Controllers
         {
             ViewData["Title"] = "Mi perfil";
             var u = repositorio.ObtenerPorEmail(User.Identity.Name);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View("Edit", u);
         }
@@ -118,6 +147,10 @@ namespace Inmobiliaria.Controllers
         {
             ViewData["Title"] = "Editar Usuario";
             var u = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(u);
         }
@@ -141,7 +174,8 @@ namespace Inmobiliaria.Controllers
                     }
                     else
                     {
-                          repositorio.Modificacion(u);
+                        repositorio.Modificacion(u);
+                        TempData["Mensaje"] = "Datos guardados correctamente";
                         if (u.Email != usuarioActual.Email) {
                             Logout();
                             return RedirectToAction(nameof(Index), "Home");
@@ -169,16 +203,20 @@ namespace Inmobiliaria.Controllers
                             u.AvatarFile.CopyTo(stream);
                         }
                         repositorio.Modificacion(u);
+                        TempData["Mensaje"] = "Datos guardados correctamente";
                         return RedirectToAction(nameof(Index));
                     }
                     else {
                         repositorio.Modificacion(u);
+                        TempData["Mensaje"] = "Datos guardados correctamente";
                         return RedirectToAction(nameof(Index));
                     }
                 }
             }
             catch(Exception ex)
             {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
                 ViewBag.Roles = Usuario.ObtenerRoles();
                 return View(vista, u);
             }
@@ -189,6 +227,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var u = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             ViewBag.Roles = Usuario.ObtenerRoles();
             return View(u);
         }
@@ -197,21 +239,25 @@ namespace Inmobiliaria.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Administrador")]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Usuario usuario)
         {
             try
             {
                 repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(usuario);
             }
         }
         [Authorize]
         public IActionResult Avatar(int id)
         {
+            
             try
             {
                 var u = repositorio.ObtenerPorId(id);
@@ -224,7 +270,9 @@ namespace Inmobiliaria.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
             }
         }
 

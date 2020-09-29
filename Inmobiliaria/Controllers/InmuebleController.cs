@@ -26,6 +26,9 @@ namespace Inmobiliaria.Controllers
         public ActionResult Index()
         {
             var lista = repositorio.ObtenerTodos();
+            ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             return View(lista);
         }
 
@@ -36,11 +39,16 @@ namespace Inmobiliaria.Controllers
                 DateTime desde = DateTime.Parse(collection["Desde"]);
                 DateTime hasta = DateTime.Parse(collection["Hasta"]);
                 var lista = repositorio.BuscarPorFechas(desde,hasta);
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
                 return View("Index", lista);
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View();
             }
         }
 
@@ -49,11 +57,16 @@ namespace Inmobiliaria.Controllers
             try
             {
                 var lista = repositorio.ObtenerPorEstado();
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
                 return View("Index", lista);
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View();
             }
         }
 
@@ -63,11 +76,16 @@ namespace Inmobiliaria.Controllers
             try
             {
                 var lista = repositorio.BuscarPorPropietario(id);
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
                 return View("Index", lista);
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View();
             }
         }
 
@@ -102,7 +120,9 @@ namespace Inmobiliaria.Controllers
             }
             catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View(inmueble);
             }
         }
 
@@ -129,11 +149,14 @@ namespace Inmobiliaria.Controllers
             try
             {
                 repositorio.Modificacion(inmueble);
+                TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View(inmueble);
             }
         }
 
@@ -142,6 +165,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var i = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             return View(i);
         }
 
@@ -154,11 +181,14 @@ namespace Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(inmueble);
             }
         }
     }

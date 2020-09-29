@@ -12,8 +12,8 @@ namespace Inmobiliaria.Controllers
 {
     public class InquilinoController : Controller
     {
-		private readonly IRepositorio<Inquilino> repositorio;
-        public InquilinoController(IRepositorio<Inquilino> repositorio)
+		private readonly IRepositorioInquilino repositorio;
+        public InquilinoController(IRepositorioInquilino repositorio)
         {
             this.repositorio = repositorio;
         }
@@ -22,23 +22,54 @@ namespace Inmobiliaria.Controllers
         // GET: Inquilino
         [Authorize]
         public ActionResult Index()
+        {                
+                var lista = repositorio.ObtenerTodos();
+                ViewBag.Id = TempData["Id"];
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                return View(lista);
+            
+        }
+
+        [Authorize]
+        public ActionResult Buscar(string q)
         {
-			var lista = repositorio.ObtenerTodos();
-			return View(lista);
+            try
+            {
+                var lista = repositorio.BuscarPorNombre(q);
+                if (TempData.ContainsKey("Mensaje"))
+                    ViewBag.Mensaje = TempData["Mensaje"];
+                if (lista.Count == 0)
+                {
+                    TempData["Mensaje"] = "No se han encontrado propietarios con ese nombre";
+                    return RedirectToAction(nameof(Index));
+                 
+                }
+                return View("Index", lista);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View();
+            }
         }
 
         // GET: Inquilino/Details/5
         [Authorize]
         public ActionResult Details(int id)
         {
+            var e = new Inquilino();
             try
             {
-                var e = repositorio.ObtenerPorId(id);
+                e = repositorio.ObtenerPorId(id);
                 return View(e);
             }
             catch (Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(e);
             }
          
         }
@@ -57,13 +88,23 @@ namespace Inmobiliaria.Controllers
         public ActionResult Create(Inquilino inquilino)
         {
             try
-            {          
-					repositorio.Alta(inquilino);
-					return RedirectToAction(nameof(Index));
+            {
+                if (ModelState.IsValid)
+                {
+                    repositorio.Alta(inquilino);
+                    TempData["Id"] = inquilino.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else {
+                    return View(inquilino);
+                }
+
 			}
             catch(Exception ex)
             {
-                throw;
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(inquilino);
             }
         }
 
@@ -72,6 +113,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Edit(int id)
         {
             var e = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             return View(e);
         }
 
@@ -85,11 +130,14 @@ namespace Inmobiliaria.Controllers
             try
             {
                 repositorio.Modificacion(inquilino);
+                TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(inquilino);
             }
         }
 
@@ -98,6 +146,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var e = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             return View(e);
         }
 
@@ -110,11 +162,14 @@ namespace Inmobiliaria.Controllers
             try
             {
                 repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(inquilino);
             }
         }
     }

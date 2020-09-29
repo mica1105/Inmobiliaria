@@ -27,6 +27,9 @@ namespace Inmobiliaria.Controllers
         {
             ViewBag.Contrato= repoContrato.ObtenerPorId(id);
             var lista = repositorio.ObtenerTodos(id);
+            ViewBag.Id = TempData["Id"];
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
             return View(lista);
         }
         
@@ -69,7 +72,9 @@ namespace Inmobiliaria.Controllers
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View(pago);
             }
         }
 
@@ -78,6 +83,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Edit(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             return View(entidad);
         }
 
@@ -90,11 +99,14 @@ namespace Inmobiliaria.Controllers
             try
             {
                 repositorio.Modificacion(pago);
+                TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction("Index", "Pago", new { id = pago.ContratoId });
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(pago);
             }
         }
 
@@ -103,6 +115,10 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
             return View(entidad);
         }
 
@@ -113,14 +129,16 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id, Pago pago)
         {
             try
-            {
-                var contrato = pago.ContratoId;
+            { 
                 repositorio.Baja(id);
+                TempData["Mensaje"] = "Eliminación realizada correctamente";
                 return RedirectToAction("Index", "Contrato");
             }
             catch(Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View(pago);
             }
         }
     }

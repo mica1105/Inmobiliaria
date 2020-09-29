@@ -10,12 +10,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
         <a class="navbar-brand" asp-action="Index">Alquileres</a>
-        <a class="nav-link" asp-action="Vigentes">Vigentes</a>  
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" asp-action="Vigentes">Vigentes</a>
+            </li>
+        </ul> 
         <form asp-action="Create" method="get" class="form-inline my-2 my-lg-0">
-            <h5>Crear Contrato:</h5>
             Desde:<input class="form-control mr-sm-2" name="Desde" type="date" required>
             Hasta:<input class="form-control mr-sm-2" name="Hasta" type="date" required>
-            <input type="submit" value="Crear Contrato" class="btn btn-outline-success my-2 my-sm-0">
+            <input type="submit" value="Crear Contrato" class="btn btn-outline-primary my-2 my-sm-0">
         </form>
     </div>
 </nav>
@@ -70,9 +73,10 @@
             <td>
                 <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
                 <a class="btn btn-outline-info" asp-controller="Pago" asp-action="Index" asp-route-id="@item.Id" title="Pagos"><i class="fas fa-money-check-alt"></i></a>
+                <a class="btn btn-outline-warning" asp-action="Renovar" asp-route-id="@item.Id" title="Renovar"><i class="fas fa-plus-square"></i></a>
                 @if (User.IsInRole("Administrador"))
                 {
-                <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                 }
             </td>
         </tr>
