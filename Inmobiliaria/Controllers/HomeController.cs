@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace Inmobiliaria.Controllers
 {
@@ -22,10 +24,12 @@ namespace Inmobiliaria.Controllers
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Privacy()
         {
-            return View();
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+            return View(claims);
         }
 
 

@@ -3,6 +3,16 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Bienvenidos</h1>
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <h2><em>¡Bienvenidos!</em></h2>
+    }
+    else
+    {
+        <h2><em>¡Bienvenido/a @User.Claims.First(x => x.Type == "FullName").Value!</em></h2>
+    }
+    <div class="text-center">
+        <img src="~/img/home.jpeg" class="img-thumbnail rounded" alt="Home" width="650" height="280">
+    </div>
     
 </div>

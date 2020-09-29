@@ -45,7 +45,8 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Pago WHERE ContratoId = {id};" +
+				string sql = $"UPDATE Contrato SET FechaFin= GETDATE() WHERE Id = {id};" +
+					$"DELETE FROM Pago WHERE ContratoId = {id};" +
 					$"DELETE FROM Contrato WHERE Id = {id};";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{

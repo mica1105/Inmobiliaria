@@ -175,6 +175,17 @@ namespace Inmobiliaria.Controllers
         public ActionResult Delete(int id)
         {
             var entidad = repositorio.ObtenerPorId(id);
+            var inicio = entidad.FechaInicio;
+            var final = entidad.FechaFin;
+            var tiempoContrato = final - inicio;
+            var hoy = DateTime.Now;
+            if (final - hoy > tiempoContrato / 2)
+            {
+                ViewBag.Multa = entidad.Precio * 2;
+            }
+            else {
+                ViewBag.Multa = entidad.Precio;
+            }
             if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];
             if (TempData.ContainsKey("Error"))

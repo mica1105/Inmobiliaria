@@ -6,10 +6,13 @@
 
 <h1>Eliminar</h1>
 
-<h3>¿Esta seguro que desea eliminar el contrato?</h3>
+<h3>¿Esta seguro que desea termirar el contrato?</h3>
 <div>
     <h4>Contrato</h4>
     <hr />
+    <h6 class="alert alert-info">
+        La multa que corresponde a la finalizacion del contrato es de: @ViewBag.Multa
+    </h6>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Id)
