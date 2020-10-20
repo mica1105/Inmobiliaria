@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Inmobiliaria.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Inmobiliaria
 {
@@ -47,7 +48,9 @@ namespace Inmobiliaria
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
             services.AddTransient<IRepositorioPago, RepositorioPago>();
             services.AddTransient<IRepositorioContrato, RepositorioContrato>();
-           
+            services.AddDbContext<DataContext>(
+                 options => options.UseSqlServer(
+                     Configuration["ConnectionStrings:DefaultConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
