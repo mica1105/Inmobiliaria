@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inmobiliaria.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Inmobiliaria.API
 {
@@ -14,10 +15,12 @@ namespace Inmobiliaria.API
     public class InmuebleController : ControllerBase
     {
         private readonly DataContext _context;
+        private readonly IConfiguration conf;
 
-        public InmuebleController(DataContext context)
+        public InmuebleController(DataContext context, IConfiguration configuration)
         {
             _context = context;
+            conf = configuration;
         }
 
         // GET: api/Inmueble
@@ -40,6 +43,7 @@ namespace Inmobiliaria.API
 
             return inmueble;
         }
+
 
         // PUT: api/Inmueble/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for

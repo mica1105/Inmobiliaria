@@ -9,9 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Inmobiliaria.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Inmobiliaria
 {
@@ -30,10 +32,23 @@ namespace Inmobiliaria
             services.AddControllersWithViews();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                             .AddCookie(options =>//el sitio web valida con cookie
-                {
+                            {
                                 options.LoginPath = "/Usuario/Login";
                                 options.LogoutPath = "/Usuario/Logout";
                                 options.AccessDeniedPath = "/Home/Restringido";
+                            })
+                            .AddJwtBearer(options =>//la api web valida con token
+                            {
+                                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = Configuration["TokenAuthentication:Issuer"],
+                                    ValidAudience = Configuration["TokenAuthentication:Audience"],
+                                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(Configuration["TokenAuthentication:SecretKey"])),
+                                };
                             });
             services.AddAuthorization(options =>
             {

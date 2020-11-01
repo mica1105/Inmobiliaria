@@ -90,6 +90,13 @@ namespace Inmobiliaria.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: propietario.Clave,
+                        salt: System.Text.Encoding.ASCII.GetBytes(conf["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8));
+                    propietario.Clave = hashed;
                     repositorio.Alta(propietario);
                     TempData["Id"] = propietario.Id;
                     return RedirectToAction(nameof(Index));

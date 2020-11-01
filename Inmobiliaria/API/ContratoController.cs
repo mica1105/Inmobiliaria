@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inmobiliaria.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Inmobiliaria.API
 {
@@ -20,25 +21,13 @@ namespace Inmobiliaria.API
             _context = context;
         }
 
-        // GET: api/Contratoes
+        // GET: api/Contrato/5
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contrato>>> GetContrato()
+        public async Task<ActionResult<IList<Contrato>>> GetContrato(int id)
         {
-            return await _context.Contrato.ToListAsync();
-        }
-
-        // GET: api/Contratoes/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Contrato>> GetContrato(int id)
-        {
-            var contrato = await _context.Contrato.FindAsync(id);
-
-            if (contrato == null)
-            {
-                return NotFound();
-            }
-
-            return contrato;
+            Propietario propietario = _context.Propietario.Find(id);
+            var contratos=_context.Contrato.Include(x=> x.Inmueble).ThenInclude(x=> x.Duenio == propietario);
+            return Ok(contratos);
         }
 
         // PUT: api/Contratoes/5

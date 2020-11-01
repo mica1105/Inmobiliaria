@@ -33,6 +33,7 @@ namespace Inmobiliaria.Models
         public Propietario Duenio { get; set; }
         public int Estado { get; set; }
         [Display(Name = "Estado")]
+        [NotMapped]
         public string EstadoNombre => Estado > 0 ? ((enEstados)Estado).ToString().Replace('_',' ') : "";
         public static IDictionary<int, string> ObtenerEstados()
         {

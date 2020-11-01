@@ -22,9 +22,18 @@ namespace Inmobiliaria.API
 
         // GET: api/Inquilino
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inquilino>>> GetInquilino()
+        public async Task<ActionResult> GetInquilino()
         {
-            return await _context.Inquilino.ToListAsync();
+            //return await _context.Inquilino.ToListAsync();
+            var propietario = User.Identity.Name;
+            var res = await _context.Contrato
+                    .Include(x=>x.Inquilino)
+                    .Include(x => x.Inmueble)
+                    .ThenInclude(x=> x.Duenio)
+                    .Where(x => x.Inmueble.Duenio.Email == propietario)
+                    .Select(x => new { x.Inquilino, x.Inmueble.Direccion })
+                    .ToListAsync();
+            return Ok(res);
         }
 
         // GET: api/Inquilino/5
