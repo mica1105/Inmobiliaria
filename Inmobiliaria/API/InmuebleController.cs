@@ -27,21 +27,32 @@ namespace Inmobiliaria.API
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Inmueble>>> GetInmueble()
         {
-            return await _context.Inmueble.ToListAsync();
+            try
+            {
+                var usuario = User.Identity.Name;
+                var res = await _context.Inmueble.Include(e => e.Duenio).Where(e => e.Duenio.Email == usuario).ToListAsync();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // GET: api/Inmueble/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Inmueble>> GetInmueble(int id)
         {
-            var inmueble = await _context.Inmueble.FindAsync(id);
-
-            if (inmueble == null)
+            try
             {
-                return NotFound();
+                var usuario = User.Identity.Name;
+                var inmueble = await _context.Inmueble.Include(e => e.Duenio).Where(e => e.Duenio.Email == usuario).SingleAsync(e => e.Id == id);
+                return Ok(inmueble);
             }
-
-            return inmueble;
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
 
@@ -51,30 +62,21 @@ namespace Inmobiliaria.API
         [HttpPut("{id}")]
         public async Task<IActionResult> PutInmueble(int id, Inmueble inmueble)
         {
-            if (id != inmueble.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(inmueble).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid && _context.Inmueble.AsNoTracking().Include(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Duenio.Email == User.Identity.Name) != null)
+                {
+                    inmueble.Id = id;
+                    _context.Inmueble.Update(inmueble);
+                    await _context.SaveChangesAsync();
+                    return Ok(inmueble);
+                }
+                return BadRequest();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!InmuebleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex);
             }
-
-            return NoContent();
         }
 
         // POST: api/Inmueble
@@ -83,31 +85,64 @@ namespace Inmobiliaria.API
         [HttpPost]
         public async Task<ActionResult<Inmueble>> PostInmueble(Inmueble inmueble)
         {
-            _context.Inmueble.Add(inmueble);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetInmueble", new { id = inmueble.Id }, inmueble);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                inmueble.PropietarioId = _context.Propietario.Single(e => e.Email == User.Identity.Name).Id;
+                _context.Inmueble.Add(inmueble);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetInmueble", new { id = inmueble.Id }, inmueble);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // DELETE: api/Inmueble/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Inmueble>> DeleteInmueble(int id)
         {
-            var inmueble = await _context.Inmueble.FindAsync(id);
-            if (inmueble == null)
+            try
             {
-                return NotFound();
+                var entidad = _context.Inmueble.Include(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Duenio.Email == User.Identity.Name);
+                if (entidad != null)
+                {
+                    _context.Inmueble.Remove(entidad);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                return BadRequest();
             }
-
-            _context.Inmueble.Remove(inmueble);
-            await _context.SaveChangesAsync();
-
-            return inmueble;
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
-
-        private bool InmuebleExists(int id)
+        // DELETE api/<controller>/5
+        [HttpDelete("BajaLogica/{id}")]
+        public async Task<IActionResult> BajaLogica(int id)
         {
-            return _context.Inmueble.Any(e => e.Id == id);
+            try
+            {
+                var entidad = _context.Inmueble.Include(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Duenio.Email == User.Identity.Name);
+                if (entidad != null)
+                {
+                    entidad.Estado = 0;//cambiar por estado = 0
+                    _context.Inmueble.Update(entidad);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
+
     }
 }

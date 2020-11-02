@@ -7,10 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inmobiliaria.Models;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Inmobiliaria.API
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ContratoController : ControllerBase
     {
@@ -23,12 +26,42 @@ namespace Inmobiliaria.API
 
         // GET: api/Contrato/5
         [HttpGet]
-        public async Task<ActionResult<IList<Contrato>>> GetContrato(int id)
+        public async Task<ActionResult<IList<Contrato>>> GetContrato()
         {
-            Propietario propietario = _context.Propietario.Find(id);
-            var contratos=_context.Contrato.Include(x=> x.Inmueble).ThenInclude(x=> x.Duenio == propietario);
-            return Ok(contratos);
+            try
+            {
+                var propietario = User.Identity.Name;
+                var contratos = await _context.Contrato.Include(x => x.Inmueble).ThenInclude(x => x.Duenio)
+                    .Where(x => x.Inmueble.Duenio.Email == propietario)
+                    .Select(x => new { x.Id, x.FechaInicio, x.FechaFin, x.Precio, x.Inmueble.Direccion })
+                    .ToListAsync();
+                return Ok(contratos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
+
+        // GET: api/Contrato/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Contrato>> GetContrato(int id)
+        {
+            try
+            {
+                var propietario = User.Identity.Name;
+                var contrato = await _context.Contrato.Include(x => x.Inmueble).ThenInclude(x => x.Duenio.Email == propietario)
+                    .Where(x => x.Inmueble.Duenio.Email == propietario)
+                    .Select(x => new { x.Id, x.FechaInicio, x.FechaFin, x.Precio, x.Inmueble })
+                    .SingleAsync();
+                return Ok(contrato);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
 
         // PUT: api/Contratoes/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
@@ -36,30 +69,21 @@ namespace Inmobiliaria.API
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContrato(int id, Contrato contrato)
         {
-            if (id != contrato.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(contrato).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                if (ModelState.IsValid && _context.Contrato.AsNoTracking().Include(e => e.Inmueble).ThenInclude(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Inmueble.Duenio.Email == User.Identity.Name) != null)
+                {
+                    contrato.Id = id;
+                    _context.Contrato.Update(contrato);
+                    await _context.SaveChangesAsync();
+                    return Ok(contrato);
+                }
+                return BadRequest();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ContratoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex);
             }
-
-            return NoContent();
         }
 
         // POST: api/Contratoes
@@ -68,31 +92,66 @@ namespace Inmobiliaria.API
         [HttpPost]
         public async Task<ActionResult<Contrato>> PostContrato(Contrato contrato)
         {
-            _context.Contrato.Add(contrato);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetContrato", new { id = contrato.Id }, contrato);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    contrato.Inmueble.Duenio.Id = _context.Propietario.Single(e => e.Email == User.Identity.Name).Id;
+                    _context.Contrato.Add(contrato);
+                    await _context.SaveChangesAsync();
+                    return CreatedAtAction("GetContrato", new { id = contrato.Id }, contrato);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // DELETE: api/Contratoes/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Contrato>> DeleteContrato(int id)
         {
-            var contrato = await _context.Contrato.FindAsync(id);
-            if (contrato == null)
+            try
             {
-                return NotFound();
+                var entidad = _context.Contrato.Include(e => e.Inmueble).ThenInclude(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Inmueble.Duenio.Email == User.Identity.Name);
+                if (entidad != null)
+                {
+                    _context.Contrato.Remove(entidad);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                return BadRequest();
             }
-
-            _context.Contrato.Remove(contrato);
-            await _context.SaveChangesAsync();
-
-            return contrato;
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         private bool ContratoExists(int id)
         {
             return _context.Contrato.Any(e => e.Id == id);
+        }
+        public async Task<IActionResult> BajaLogica(int id)
+        {
+            try
+            {
+                var entidad = _context.Contrato.Include(e => e.Inmueble).ThenInclude(e => e.Duenio).FirstOrDefault(e => e.Id == id && e.Inmueble.Duenio.Email == User.Identity.Name);
+                if (entidad != null)
+                {
+                    entidad.Precio = 0;//cambiar por estado = 0
+                    _context.Contrato.Update(entidad);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
     }
 }

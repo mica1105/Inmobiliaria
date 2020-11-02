@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Inmobiliaria.API
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class InquilinoController : ControllerBase
     {
@@ -19,35 +22,62 @@ namespace Inmobiliaria.API
         {
             _context = context;
         }
-
         // GET: api/Inquilino
         [HttpGet]
-        public async Task<ActionResult> GetInquilino()
+        public async Task<ActionResult<IEnumerable<Inquilino>>> GetInquilino()
         {
-            //return await _context.Inquilino.ToListAsync();
-            var propietario = User.Identity.Name;
-            var res = await _context.Contrato
-                    .Include(x=>x.Inquilino)
-                    .Include(x => x.Inmueble)
-                    .ThenInclude(x=> x.Duenio)
-                    .Where(x => x.Inmueble.Duenio.Email == propietario)
-                    .Select(x => new { x.Inquilino, x.Inmueble.Direccion })
-                    .ToListAsync();
-            return Ok(res);
+            try
+            {
+                return await _context.Inquilino.ToListAsync();
+                
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        // GET: api/Inquilino
+        [HttpGet("PorPropietario")]
+        public async Task<ActionResult> GetPorPropietario()
+        {
+            try
+            {
+                //return await _context.Inquilino.ToListAsync();
+                var propietario = User.Identity.Name;
+                var res = await _context.Contrato
+                        .Include(x => x.Inquilino)
+                        .Include(x => x.Inmueble)
+                        .ThenInclude(x => x.Duenio)
+                        .Where(x => x.Inmueble.Duenio.Email == propietario)
+                        .Select(x => new { x.Inquilino, x.Inmueble.Direccion })
+                        .ToListAsync();
+                return Ok(res);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex);
+            }
         }
 
         // GET: api/Inquilino/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Inquilino>> GetInquilino(int id)
         {
-            var inquilino = await _context.Inquilino.FindAsync(id);
-
-            if (inquilino == null)
+            try
             {
-                return NotFound();
-            }
+                var inquilino = await _context.Inquilino.FindAsync(id);
 
-            return inquilino;
+                if (inquilino == null)
+                {
+                    return NotFound();
+                }
+
+                return inquilino;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // PUT: api/Inquilino/5

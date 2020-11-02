@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace Inmobiliaria.API
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class PropietarioController : ControllerBase
     {
@@ -40,6 +40,7 @@ namespace Inmobiliaria.API
         }*/
 
         [HttpGet("Vigentes")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Propietario>>> GetVigentes()
         {
             try

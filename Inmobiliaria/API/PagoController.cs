@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Inmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Inmobiliaria.API
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class PagoController : ControllerBase
     {
@@ -20,25 +23,36 @@ namespace Inmobiliaria.API
             _context = context;
         }
 
-        // GET: api/Pagoes
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pago>>> GetPago()
+        // GET: api/Pago/PorInmueble/5
+        [HttpGet("PorInmueble/{id}")]
+        public async Task<ActionResult<IEnumerable<Pago>>> GetPorInmueble(int id)
         {
-            return await _context.Pago.ToListAsync();
+            try { 
+            var usuario = User.Identity.Name;
+            var pagos = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=> x.Inmueble)
+                .Where(x => x.ContratoId == id && x.Alquiler.Inmueble.Duenio.Email== usuario)
+                .ToListAsync();
+            return Ok(pagos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // GET: api/Pagoes/5
+        // GET: api/Pago/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Pago>> GetPago(int id)
         {
-            var pago = await _context.Pago.FindAsync(id);
-
-            if (pago == null)
-            {
-                return NotFound();
+            try { 
+            var usuario = User.Identity.Name;
+            var pagos = await _context.Pago.Where(x => x.Id == id).ToListAsync();
+            return Ok(pagos);
             }
-
-            return pago;
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // PUT: api/Pagoes/5
