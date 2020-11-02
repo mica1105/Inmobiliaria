@@ -29,10 +29,10 @@ namespace Inmobiliaria.API
         {
             try { 
             var usuario = User.Identity.Name;
-            var pagos = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=> x.Inmueble)
+            var pago = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=> x.Inmueble)
                 .Where(x => x.ContratoId == id && x.Alquiler.Inmueble.Duenio.Email== usuario)
-                .ToListAsync();
-            return Ok(pagos);
+                .SingleAsync();
+            return Ok(pago);
             }
             catch (Exception ex)
             {
