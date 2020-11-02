@@ -18,6 +18,7 @@ namespace Inmobiliaria.Models
 		[Required]
 		public string Dni { get; set; }
 		public string Telefono { get; set; }
+		public int Estado { get; set; }
 		[Required, EmailAddress]
 		public string Email { get; set; }
 		[Required, DataType(DataType.Password)]

@@ -30,27 +30,33 @@ namespace Inmobiliaria.API
         }
 
         // GET: api/Propietario
-        /*[HttpGet]
-        public async Task<ActionResult<IEnumerable<Propietario>>> GetPropietario()
-        {
-            var res= await _context.Propietario
-                    .Select(x => new { x.Id, x.Nombre, x.Apellido, x.Dni, x.Email})
-                    .ToListAsync();
-            return Ok(res);
-        }*/
-
-        [HttpGet("Vigentes")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<Propietario>>> GetVigentes()
+        public async Task<ActionResult<IEnumerable<Propietario>>> GetPropietario()
         {
             try
             {
-                return await _context.Contrato
+                return await _context.Propietario.ToListAsync();
+                
+            }
+            catch (Exception ex) {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("Vigentes")]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetVigentes()
+        {
+            try
+            {
+                var lista= await _context.Contrato
                     .Include(x => x.Inmueble)
                     .ThenInclude(x=> x.Duenio)
                     .Where(x => x.FechaInicio <= DateTime.Now && x.FechaFin >= DateTime.Now)
-                    .Select(x => x.Inmueble.Duenio)
-                    .AsNoTracking().ToListAsync();
+                    .Select(x => new { x.Inmueble.Duenio.Nombre, x.Inmueble.Duenio.Apellido})
+                    .ToListAsync();
+                return Ok(lista);
             }
             catch (Exception ex)
             {
@@ -58,6 +64,7 @@ namespace Inmobiliaria.API
             }
         }
 
+        /*
         // GET: api/Propietario/5
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -65,7 +72,7 @@ namespace Inmobiliaria.API
             try
             {
                 var propietario = User.Identity.Name;
-                var res = await _context.Propietario.Select(x => new { x.Id, x.Nombre, x.Apellido, x.Dni, x.Email }).SingleOrDefaultAsync(x => x.Email == propietario);
+                var res = await _context.Propietario.SingleOrDefaultAsync(x => x.Email == propietario);
                 return Ok(res);
             }
             catch (Exception ex)
@@ -73,7 +80,7 @@ namespace Inmobiliaria.API
                 return BadRequest(ex);
             }
         }
-
+        */
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromForm] LoginView loginView)

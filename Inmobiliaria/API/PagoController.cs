@@ -23,8 +23,9 @@ namespace Inmobiliaria.API
             _context = context;
         }
 
-        // GET: api/Pago/PorInmueble/5
-        [HttpGet("PorInmueble/{id}")]
+        // GET: api/Pago/PorContrato/5
+        [HttpGet("PorContrato/{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Pago>>> GetPorInmueble(int id)
         {
             try { 

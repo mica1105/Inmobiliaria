@@ -16,6 +16,7 @@ namespace Inmobiliaria.Models
     }
     public class Inmueble
     {
+        [Key]
         [Display(Name = "Código")]
         public int Id { get; set; }
         [Required]
