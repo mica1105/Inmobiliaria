@@ -44,15 +44,33 @@ namespace Inmobiliaria.API
         }
 
         // GET: api/Contrato/5
+        [HttpGet("Vigentes")]
+        public async Task<ActionResult<IList<Contrato>>> GetVigentes()
+        {
+            try
+            {
+                var propietario = User.Identity.Name;
+                var contratos = await _context.Contrato.Include(x => x.Inmueble)
+                    .Where(x => x.Inmueble.Duenio.Email == propietario && x.FechaInicio <= DateTime.Now && x.FechaFin >= DateTime.Now)
+                    .ToListAsync();
+                return Ok(contratos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+
+        // GET: api/Contrato/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Contrato>> GetContrato(int id)
         {
             try
             {
                 var propietario = User.Identity.Name;
-                var contrato = await _context.Contrato.Include(x => x.Inmueble).ThenInclude(x => x.Duenio.Email == propietario)
+                var contrato = await _context.Contrato.Include(x => x.Inmueble)
                     .Where(x => x.Inmueble.Duenio.Email == propietario)
-                    .Select(x => new { x.Id, x.FechaInicio, x.FechaFin, x.Precio, x.Inmueble })
                     .SingleAsync();
                 return Ok(contrato);
             }

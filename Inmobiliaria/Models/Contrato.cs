@@ -23,7 +23,7 @@ namespace Inmobiliaria.Models
         public Decimal Precio { get; set; }
         [Display(Name = "Inmueble")]
         public int InmuebleId { get; set; }
-        [ForeignKey("PropietarioId")]
+        [ForeignKey("InmuebleId")]
         public Inmueble Inmueble { get; set; }
         [Display(Name ="Inquilino")]
         public int InquilinoId { get; set; }

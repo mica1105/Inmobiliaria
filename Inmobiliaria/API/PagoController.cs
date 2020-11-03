@@ -25,14 +25,14 @@ namespace Inmobiliaria.API
 
         // GET: api/Pago/PorContrato/5
         [HttpGet("PorContrato/{id}")]
-        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Pago>>> GetPorInmueble(int id)
         {
             try { 
             var usuario = User.Identity.Name;
-            var pago = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=> x.Inmueble)
-                .Where(x => x.ContratoId == id && x.Alquiler.Inmueble.Duenio.Email== usuario)
-                .SingleAsync();
+            var pago = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=>x.Inmueble)
+                .Where(x => x.Alquiler.Id == id && x.Alquiler.Inmueble.Duenio.Email == usuario)
+                .Select(x=> new { x.Id, x.NroPago, x.Fecha, x.Importe, x.ContratoId, x.Alquiler.Inmueble.Direccion})
+                .ToListAsync();
             return Ok(pago);
             }
             catch (Exception ex)
@@ -47,8 +47,8 @@ namespace Inmobiliaria.API
         {
             try { 
             var usuario = User.Identity.Name;
-            var pagos = await _context.Pago.Where(x => x.Id == id).ToListAsync();
-            return Ok(pagos);
+            var pago = await _context.Pago.Where(x => x.Id == id && x.Alquiler.Inmueble.Duenio.Email == usuario).SingleOrDefaultAsync();
+            return Ok(pago);
             }
             catch (Exception ex)
             {

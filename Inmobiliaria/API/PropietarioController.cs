@@ -30,7 +30,7 @@ namespace Inmobiliaria.API
         }
 
         // GET: api/Propietario
-        [HttpGet]
+        /*[HttpGet]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Propietario>>> GetPropietario()
         {
@@ -42,21 +42,20 @@ namespace Inmobiliaria.API
             catch (Exception ex) {
                 return BadRequest(ex);
             }
-        }
+        }*/
 
         [HttpGet("Vigentes")]
         [AllowAnonymous]
-        public async Task<ActionResult> GetVigentes()
+        public async Task<ActionResult<IEnumerable<Propietario>>> GetVigentes()
         {
             try
             {
-                var lista= await _context.Contrato
+                return await _context.Contrato
                     .Include(x => x.Inmueble)
                     .ThenInclude(x=> x.Duenio)
                     .Where(x => x.FechaInicio <= DateTime.Now && x.FechaFin >= DateTime.Now)
-                    .Select(x => new { x.Inmueble.Duenio.Nombre, x.Inmueble.Duenio.Apellido})
+                    .Select(x=> x.Inmueble.Duenio)
                     .ToListAsync();
-                return Ok(lista);
             }
             catch (Exception ex)
             {
@@ -64,7 +63,7 @@ namespace Inmobiliaria.API
             }
         }
 
-        /*
+        
         // GET: api/Propietario/5
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -80,7 +79,7 @@ namespace Inmobiliaria.API
                 return BadRequest(ex);
             }
         }
-        */
+        
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromForm] LoginView loginView)
