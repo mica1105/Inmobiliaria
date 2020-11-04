@@ -21,8 +21,8 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO Inmueble (Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId) " +
-					"VALUES (@direccion, @tipo, @ambientes, @uso, @precio, @estado, @propietarioId);" +
+				string sql = $"INSERT INTO Inmueble (Direccion, Tipo, Ambientes, Uso, Precio, Estado, Imagen, PropietarioId) " +
+					"VALUES (@direccion, @tipo, @ambientes, @uso, @precio, @estado, @imagen; @propietarioId);" +
 					"SELECT SCOPE_IDENTITY();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
 				using (var command = new SqlCommand(sql, connection))
 				{
@@ -33,6 +33,10 @@ namespace Inmobiliaria.Models
 					command.Parameters.AddWithValue("@uso", entidad.Uso);
 					command.Parameters.AddWithValue("@precio", entidad.Precio);
 					command.Parameters.AddWithValue("@estado", entidad.Estado);
+					if (String.IsNullOrEmpty(entidad.Imagen))
+						command.Parameters.AddWithValue("@avatar", DBNull.Value);
+					else
+						command.Parameters.AddWithValue("@avatar", entidad.Imagen);
 					command.Parameters.AddWithValue("@propietarioId", entidad.PropietarioId);
 					connection.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
@@ -64,7 +68,7 @@ namespace Inmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = "UPDATE Inmueble SET " +
-					"Direccion=@direccion, Tipo=@tipo, Ambientes=@ambientes, Uso=@uso, Precio=@precio, Estado=@estado, PropietarioId=@propietarioId " +
+					"Direccion=@direccion, Tipo=@tipo, Ambientes=@ambientes, Uso=@uso, Precio=@precio, Estado=@estado, Imagen= @imagen, PropietarioId=@propietarioId " +
 					"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -74,6 +78,7 @@ namespace Inmobiliaria.Models
 					command.Parameters.AddWithValue("@uso", entidad.Uso);
 					command.Parameters.AddWithValue("@precio", entidad.Precio);
 					command.Parameters.AddWithValue("@estado", entidad.Estado);
+					command.Parameters.AddWithValue("@imagen", entidad.Imagen);
 					command.Parameters.AddWithValue("@propietarioId", entidad.PropietarioId);
 					command.Parameters.AddWithValue("@id", entidad.Id);
 					command.CommandType = CommandType.Text;
@@ -89,7 +94,7 @@ namespace Inmobiliaria.Models
 			IList<Inmueble> res = new List<Inmueble>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -107,12 +112,13 @@ namespace Inmobiliaria.Models
 							Uso = reader.GetString(4),
 							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
-							PropietarioId = reader.GetInt32(7),
+							Imagen = reader["Imagen"].ToString(),
+							PropietarioId = reader.GetInt32(8),
 							Duenio = new Propietario
 							{
-								Id = reader.GetInt32(7),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
+								Id = reader.GetInt32(8),
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
 							}
 						};
 						res.Add(entidad);
@@ -127,7 +133,7 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id " +
 					$"WHERE i.Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -147,12 +153,13 @@ namespace Inmobiliaria.Models
 							Uso = reader.GetString(4),
 							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
-							PropietarioId = reader.GetInt32(7),
+							Imagen = reader["Imagen"].ToString(),
+							PropietarioId = reader.GetInt32(8),
 							Duenio = new Propietario
 							{
-								Id = reader.GetInt32(7),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
+								Id = reader.GetInt32(8),
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
 							}
 						};
 					}
@@ -167,7 +174,7 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
 					$" WHERE PropietarioId = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -178,7 +185,7 @@ namespace Inmobiliaria.Models
 					var reader = command.ExecuteReader();
 					while (reader.Read())
 					{
-						entidad = new Inmueble
+						entidad = new Inmueble 
 						{
 							Id = reader.GetInt32(0),
 							Direccion = reader.GetString(1),
@@ -187,12 +194,13 @@ namespace Inmobiliaria.Models
 							Uso = reader.GetString(4),
 							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
-							PropietarioId = reader.GetInt32(7),
+							Imagen = reader["Imagen"].ToString(),
+							PropietarioId = reader.GetInt32(8),
 							Duenio = new Propietario
 							{
-								Id = reader.GetInt32(7),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
+								Id = reader.GetInt32(8),
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
 							}
 						};
 						res.Add(entidad);
@@ -206,7 +214,7 @@ namespace Inmobiliaria.Models
 			IList<Inmueble> res = new List<Inmueble>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = "SELECT i.Id, Direccion, Tipo, Ambientes, Uso, Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id" +
 					" WHERE Estado = 1";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -225,12 +233,13 @@ namespace Inmobiliaria.Models
 							Uso = reader.GetString(4),
 							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
-							PropietarioId = reader.GetInt32(7),
+							Imagen = reader["Imagen"].ToString(),
+							PropietarioId = reader.GetInt32(8),
 							Duenio = new Propietario
 							{
-								Id = reader.GetInt32(7),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
+								Id = reader.GetInt32(8),
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
 							}
 						};
 						res.Add(entidad);
@@ -245,7 +254,7 @@ namespace Inmobiliaria.Models
 			Inmueble entidad = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, i.Precio, Estado, PropietarioId, p.Nombre, p.Apellido" +
+				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, i.Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id LEFT JOIN Contrato c ON i.Id= c.InmuebleId " +
 					$" WHERE FechaInicio > @salida OR FechaFin < @ingreso OR c.Id IS NULL AND Estado = 1";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -266,12 +275,13 @@ namespace Inmobiliaria.Models
 							Uso = reader.GetString(4),
 							Precio = reader.GetDecimal(5),
 							Estado = reader.GetInt32(6),
-							PropietarioId = reader.GetInt32(7),
+							Imagen = reader["Imagen"].ToString(),
+							PropietarioId = reader.GetInt32(8),
 							Duenio = new Propietario
 							{
-								Id = reader.GetInt32(7),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
+								Id = reader.GetInt32(8),
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
 							}
 						};
 						res.Add(entidad);

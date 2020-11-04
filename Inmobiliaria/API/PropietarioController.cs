@@ -64,7 +64,7 @@ namespace Inmobiliaria.API
         }
 
         
-        // GET: api/Propietario/5
+        // GET: api/Propietario
         [HttpGet]
         public async Task<ActionResult> Get()
         {
@@ -127,24 +127,16 @@ namespace Inmobiliaria.API
         // PUT: api/Propietario/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id,[FromForm] Propietario entidad)
+        [HttpPut]
+        public async Task<IActionResult> Put(Propietario entidad)
         {
             try
             {
                 if (ModelState.IsValid && _context.Propietario.AsNoTracking().FirstOrDefault(x=> x.Email == User.Identity.Name) != null)
                 {
-                    entidad.Id = id;
-
-                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: entidad.Clave,
-                    salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
-                    prf: KeyDerivationPrf.HMACSHA1,
-                    iterationCount: 1000,
-                    numBytesRequested: 256 / 8));
-
-                    entidad.Clave = hashed;
-
+                    Propietario p= _context.Propietario.AsNoTracking().Where(x=>x.Email == User.Identity.Name).First();
+                    entidad.Id = p.Id;
+                    entidad.Estado = p.Estado;
                     _context.Propietario.Update(entidad) ;
                     await _context.SaveChangesAsync();
                     return Ok(entidad);

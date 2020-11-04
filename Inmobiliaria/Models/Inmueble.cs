@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.SqlTypes;
+using Microsoft.AspNetCore.Http;
 
 namespace Inmobiliaria.Models
 {
@@ -27,7 +28,9 @@ namespace Inmobiliaria.Models
         [Required]
         public string Uso { get; set; }
         [Required]
-        public decimal Precio { get; set; }  
+        public decimal Precio { get; set; }
+        public string Imagen { get; set; }
+        public IFormFile ImagenFile { get; set; }
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }
         [ForeignKey("PropietarioId")]

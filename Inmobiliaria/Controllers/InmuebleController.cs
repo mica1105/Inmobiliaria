@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Inmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -13,11 +15,13 @@ namespace Inmobiliaria.Controllers
 {
     public class InmuebleController : Controller
     {
-        private IRepositorioInmueble repositorio;
+        private readonly IRepositorioInmueble repositorio;
+        private readonly IWebHostEnvironment environment;
         private readonly IRepositorioPropietario repoPropietario;
-        public InmuebleController(IRepositorioInmueble repositorio, IRepositorioPropietario repositorioPropietario)
+        public InmuebleController(IRepositorioInmueble repositorio, IWebHostEnvironment environment, IRepositorioPropietario repositorioPropietario)
         {
             this.repositorio = repositorio;
+            this.environment = environment;
             repoPropietario = repositorioPropietario;
         }
 
@@ -108,7 +112,26 @@ namespace Inmobiliaria.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    repositorio.Alta(inmueble);
+                    var nbreRnd = Guid.NewGuid();//posible nombre aleatorio
+                    int res = repositorio.Alta(inmueble);
+                    if (inmueble.ImagenFile != null && inmueble.Id > 0)
+                    {
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "inmueble_" + inmueble.Id + Path.GetExtension(inmueble.ImagenFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        inmueble.Imagen = Path.Combine("/Uploads", fileName);
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            inmueble.ImagenFile.CopyTo(stream);
+                        }
+                        repositorio.Modificacion(inmueble);
+                    }
                     TempData["Id"] = inmueble.Id;
                     return RedirectToAction(nameof(Index));
                 }

@@ -39,16 +39,10 @@
                 @Html.DisplayNameFor(model => model.Tipo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Ambientes)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Uso)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PropietarioId)
+                @Html.DisplayNameFor(model => model.Imagen)
             </th>
             <th></th>
         </tr>
@@ -66,16 +60,10 @@
                 @Html.DisplayFor(modelItem => item.Tipo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Ambientes)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uso)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @(item.Duenio.Nombre + " " + item.Duenio.Apellido)
+                <img width="60" src="@item.Imagen" />
             </td>
             <td>
                 <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
@@ -83,7 +71,7 @@
                 {
                     <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Id" title="Eliminar"><i class="far fa-trash-alt"></i></a>
                 }
-            <a class="btn btn-outline-dark" asp-controller="Contrato" asp-action="PorInmueble" asp-route-id="@item.Id" title="Alquileres"><i class="fas fa-file-contract"></i></a>
+                <a class="btn btn-outline-dark" asp-controller="Contrato" asp-action="PorInmueble" asp-route-id="@item.Id" title="Alquileres"><i class="fas fa-file-contract"></i></a>
             </td>
         </tr>
 }
