@@ -214,5 +214,27 @@ namespace Inmobiliaria.Controllers
                 return View(inmueble);
             }
         }
+
+        [Authorize]
+        public IActionResult Imagen(int id)
+        {
+
+            try
+            {
+                var i = repositorio.ObtenerPorId(id);
+                var stream = System.IO.File.Open(
+                    Path.Combine(environment.WebRootPath, i.Imagen.Substring(1)),
+                    FileMode.Open,
+                    FileAccess.Read);
+                var ext = Path.GetExtension(i.Imagen);
+                return new FileStreamResult(stream, $"image/{ext.Substring(1)}");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrate = ex.StackTrace;
+                return View();
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace Inmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"INSERT INTO Inmueble (Direccion, Tipo, Ambientes, Uso, Precio, Estado, Imagen, PropietarioId) " +
-					"VALUES (@direccion, @tipo, @ambientes, @uso, @precio, @estado, @imagen; @propietarioId);" +
+					"VALUES (@direccion, @tipo, @ambientes, @uso, @precio, @estado, @imagen, @propietarioId);" +
 					"SELECT SCOPE_IDENTITY();";//devuelve el id insertado (LAST_INSERT_ID para mysql)
 				using (var command = new SqlCommand(sql, connection))
 				{
@@ -34,9 +34,9 @@ namespace Inmobiliaria.Models
 					command.Parameters.AddWithValue("@precio", entidad.Precio);
 					command.Parameters.AddWithValue("@estado", entidad.Estado);
 					if (String.IsNullOrEmpty(entidad.Imagen))
-						command.Parameters.AddWithValue("@avatar", DBNull.Value);
+						command.Parameters.AddWithValue("@imagen", DBNull.Value);
 					else
-						command.Parameters.AddWithValue("@avatar", entidad.Imagen);
+						command.Parameters.AddWithValue("@imagen", entidad.Imagen);
 					command.Parameters.AddWithValue("@propietarioId", entidad.PropietarioId);
 					connection.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
@@ -51,7 +51,9 @@ namespace Inmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM Inmueble WHERE Id = {id}";
+				string sql = $"DELETE FROM Pago FROM Contrato c INNER JOIN Pago p ON c.Id = p.ContratoId WHERE ContratoId = {id} ;" +
+					$"DELETE FROM Contrato WHERE InmuebleId = {id};" +
+					$"DELETE FROM Inmueble WHERE Id = {id}";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;

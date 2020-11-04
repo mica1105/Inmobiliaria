@@ -63,7 +63,7 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                <img width="60" src="@item.Imagen" />
+                <a asp-action="Imagen" asp-route-id="@item.Id" title="@item.Imagen"><img width="60" src="@item.Imagen"/></a>
             </td>
             <td>
                 <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@item.Id" title="Editar"><i class="far fa-edit"></i></a>
