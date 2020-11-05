@@ -12,8 +12,7 @@ namespace Inmobiliaria.Models
     public enum enEstados
     {
         Disponible = 1,
-        En_Refaccion = 2,
-        Suspendido = 3,
+        Suspendido = 2,
     }
     public class Inmueble
     {
@@ -30,6 +29,7 @@ namespace Inmobiliaria.Models
         [Required]
         public decimal Precio { get; set; }
         public string Imagen { get; set; }
+        [NotMapped]
         public IFormFile ImagenFile { get; set; }
         [Display(Name = "Dueño")]
         public int PropietarioId { get; set; }

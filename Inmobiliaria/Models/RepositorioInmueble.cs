@@ -258,7 +258,7 @@ namespace Inmobiliaria.Models
 			{
 				string sql = $"SELECT i.Id, Direccion, Tipo, Ambientes, Uso, i.Precio, i.Estado, Imagen, PropietarioId, p.Nombre, p.Apellido" +
 					$" FROM Inmueble i INNER JOIN Propietario p ON i.PropietarioId = p.Id LEFT JOIN Contrato c ON i.Id= c.InmuebleId " +
-					$" WHERE FechaInicio > @salida OR FechaFin < @ingreso OR c.Id IS NULL AND Estado = 1";
+					$" WHERE FechaInicio > @salida OR FechaFin < @ingreso OR c.Id IS NULL AND i.Estado = 1";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.Parameters.Add("@ingreso", SqlDbType.Date).Value = ingreso.Date;

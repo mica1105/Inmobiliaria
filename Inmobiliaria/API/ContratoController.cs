@@ -43,14 +43,14 @@ namespace Inmobiliaria.API
             }
         }
 
-        // GET: api/Contrato/5
+        // GET: api/Contrato/Vigentes
         [HttpGet("Vigentes")]
         public async Task<ActionResult<IList<Contrato>>> GetVigentes()
         {
             try
             {
                 var propietario = User.Identity.Name;
-                var contratos = await _context.Contrato.Include(x => x.Inmueble)
+                var contratos = await _context.Contrato
                     .Where(x => x.Inmueble.Duenio.Email == propietario && x.FechaInicio <= DateTime.Now && x.FechaFin >= DateTime.Now)
                     .ToListAsync();
                 return Ok(contratos);
@@ -69,7 +69,7 @@ namespace Inmobiliaria.API
             try
             {
                 var propietario = User.Identity.Name;
-                var contrato = await _context.Contrato.Include(x => x.Inmueble)
+                var contrato = await _context.Contrato.Include(x => x.Inmueble).Include(x=>x.Inquilino)
                     .Where(x => x.Inmueble.Duenio.Email == propietario)
                     .SingleAsync();
                 return Ok(contrato);

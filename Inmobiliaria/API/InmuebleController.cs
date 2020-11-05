@@ -33,7 +33,7 @@ namespace Inmobiliaria.API
             try
             {
                 var usuario = User.Identity.Name;
-                var res = await _context.Inmueble.Include(e => e.Duenio).Where(e => e.Duenio.Email == usuario).ToListAsync();
+                var res = await _context.Inmueble.Where(e => e.Duenio.Email == usuario).ToListAsync();
                 return Ok(res);
             }
             catch (Exception ex)
@@ -50,6 +50,40 @@ namespace Inmobiliaria.API
             {
                 var usuario = User.Identity.Name;
                 var inmueble = await _context.Inmueble.Include(e => e.Duenio).Where(e => e.Duenio.Email == usuario).SingleAsync(e => e.Id == id);
+                return Ok(inmueble);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("PorContrato/{id}")]
+        public async Task<ActionResult<Inmueble>> GetPorContrato(int id)
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var inmueble = await _context.Contrato.Include(e => e.Inmueble)
+                    .Where(e => e.Inmueble.Duenio.Email == usuario && e.Id == id)
+                    .Select(x=>x.Inmueble).SingleAsync();
+                return Ok(inmueble);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet("PorInquilino/{id}")]
+        public async Task<ActionResult<Inmueble>> GetPorInquilino(int id)
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var inmueble = await _context.Contrato.Include(e => e.Inquilino)
+                    .Where(e => e.Inmueble.Duenio.Email == usuario && e.Inquilino.Id == id)
+                    .Select(x => x.Inmueble).SingleAsync();
                 return Ok(inmueble);
             }
             catch (Exception ex)

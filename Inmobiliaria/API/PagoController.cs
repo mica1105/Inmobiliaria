@@ -29,9 +29,8 @@ namespace Inmobiliaria.API
         {
             try { 
             var usuario = User.Identity.Name;
-            var pago = await _context.Pago.Include(x=> x.Alquiler).ThenInclude(x=>x.Inmueble)
-                .Where(x => x.Alquiler.Id == id && x.Alquiler.Inmueble.Duenio.Email == usuario)
-                .Select(x=> new { x.Id, x.NroPago, x.Fecha, x.Importe, x.ContratoId, x.Alquiler.Inmueble.Direccion})
+            var pago = await _context.Pago
+                .Where(x=> x.Alquiler.Inmueble.Duenio.Email == usuario && x.Alquiler.InmuebleId == id)
                 .ToListAsync();
             return Ok(pago);
             }

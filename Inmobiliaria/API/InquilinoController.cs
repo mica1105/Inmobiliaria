@@ -28,7 +28,8 @@ namespace Inmobiliaria.API
         {
             try
             {
-                return await _context.Inquilino.ToListAsync();
+                var lista= await _context.Inquilino.ToListAsync();
+                return Ok(lista);
                 
             }
             catch (Exception ex)
@@ -47,14 +48,33 @@ namespace Inmobiliaria.API
                 var propietario = User.Identity.Name;
                 var res = await _context.Contrato
                         .Include(x => x.Inquilino)
-                        .Include(x => x.Inmueble)
-                        .ThenInclude(x => x.Duenio)
                         .Where(x => x.Inmueble.Duenio.Email == propietario)
-                        .Select(x => new { x.Inquilino, x.Inmueble.Direccion })
+                        .Select(x => x.Inquilino)
                         .ToListAsync();
                 return Ok(res);
             }
             catch (Exception ex) {
+                return BadRequest(ex);
+            }
+        }
+
+        // GET: api/Inquilino/Inmueble/5
+        [HttpGet("Inmueble/{id}")]
+        public async Task<ActionResult> GetInmueble(int id)
+        {
+            try
+            {
+                //return await _context.Inquilino.ToListAsync();
+                var propietario = User.Identity.Name;
+                var res = await _context.Contrato
+                        .Include(x => x.Inmueble)
+                        .Where(x => x.Inmueble.Duenio.Email == propietario && x.InquilinoId == id)
+                        .Select(x => x.Inmueble.Direccion)
+                        .FirstAsync();
+                return Ok(res);
+            }
+            catch (Exception ex)
+            {
                 return BadRequest(ex);
             }
         }
