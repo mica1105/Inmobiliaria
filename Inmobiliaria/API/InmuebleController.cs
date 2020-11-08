@@ -58,23 +58,6 @@ namespace Inmobiliaria.API
             }
         }
 
-        [HttpGet("PorContrato/{id}")]
-        public async Task<ActionResult<Inmueble>> GetPorContrato(int id)
-        {
-            try
-            {
-                var usuario = User.Identity.Name;
-                var inmueble = await _context.Contrato.Include(e => e.Inmueble)
-                    .Where(e => e.Inmueble.Duenio.Email == usuario && e.Id == id)
-                    .Select(x=>x.Inmueble).SingleAsync();
-                return Ok(inmueble);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
         [HttpGet("PorInquilino/{id}")]
         public async Task<ActionResult<Inmueble>> GetPorInquilino(int id)
         {

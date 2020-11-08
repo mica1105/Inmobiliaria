@@ -31,9 +31,8 @@ namespace Inmobiliaria.API
             try
             {
                 var propietario = User.Identity.Name;
-                var contratos = await _context.Contrato.Include(x => x.Inmueble).ThenInclude(x => x.Duenio)
+                var contratos = await _context.Contrato.Include(x => x.Inmueble).Include(x=>x.Inquilino)
                     .Where(x => x.Inmueble.Duenio.Email == propietario)
-                    .Select(x => new { x.Id, x.FechaInicio, x.FechaFin, x.Precio, x.Inmueble.Direccion })
                     .ToListAsync();
                 return Ok(contratos);
             }
@@ -50,7 +49,7 @@ namespace Inmobiliaria.API
             try
             {
                 var propietario = User.Identity.Name;
-                var contratos = await _context.Contrato
+                var contratos = await _context.Contrato.Include(x=>x.Inmueble).Include(x=> x.Inquilino)
                     .Where(x => x.Inmueble.Duenio.Email == propietario && x.FechaInicio <= DateTime.Now && x.FechaFin >= DateTime.Now)
                     .ToListAsync();
                 return Ok(contratos);
